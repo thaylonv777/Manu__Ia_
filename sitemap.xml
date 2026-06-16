@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1"
+        xmlns:xhtml="http://www.w3.org/1999/xhtml">
+
+  <url>
+    <loc>https://www.thaylonvieira.online/</loc>
+    <lastmod>2026-04-21</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://www.thaylonvieira.online/"/>
+    <image:image>
+      <image:loc>https://hebbkx1anhila5yf.public.blob.vercel-storage.com/MULT8404-ZxtqlfEbVELxRCwpIcaUSWvTHDow4K.jpg</image:loc>
+      <image:title>Thaylon Vieira - Especialista em Tráfego Pago</image:title>
+      <image:caption>Aulas particulares de Meta Ads e Google Ads com Thaylon Vieira</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://hebbkx1anhila5yf.public.blob.vercel-storage.com/MULT8511.JPG-84nbMTzaacRf1SqVEFfdPLbMqQbZsl.jpeg</image:loc>
+      <image:title>Professor Thaylon Vieira</image:title>
+      <image:caption>Professor de aulas particulares de tráfego pago</image:caption>
+    </image:image>
+  </url>
+
+</urlset>

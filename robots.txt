@@ -1,0 +1,23 @@
+# robots.txt - Thaylon Aulas Particulares de Tráfego Pago
+# https://www.thaylonvieira.online/
+
+User-agent: *
+Allow: /
+
+# Permitir que bots do Google indexem imagens
+User-agent: Googlebot-Image
+Allow: /
+
+# Permitir bots do Bing
+User-agent: Bingbot
+Allow: /
+
+# Bloquear bots indesejados (opcional - bots agressivos de scraping)
+User-agent: AhrefsBot
+Crawl-delay: 10
+
+User-agent: SemrushBot
+Crawl-delay: 10
+
+# Sitemap
+Sitemap: https://www.thaylonvieira.online/sitemap.xml
