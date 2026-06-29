@@ -469,6 +469,11 @@ async function main() {
   await writeFile(path.join(BLOG_DIR, 'index.html'), renderIndice(posts), 'utf8');
   await writeFile(SITEMAP, renderSitemap(posts), 'utf8');
   console.log(`[ok] indice e sitemap atualizados. Total: ${posts.length}`);
+
+  // Exporta o slug e o titulo para o workflow montar o link de preview
+  if (process.env.GITHUB_OUTPUT) {
+    await writeFile(process.env.GITHUB_OUTPUT, `slug=${slug}\ntitulo=${artigo.titulo}\n`, { flag: 'a' });
+  }
 }
 
 main().catch((err) => { console.error('[falha]', err.message); process.exit(1); });
