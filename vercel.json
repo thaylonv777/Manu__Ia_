@@ -1,4 +1,3 @@
-{
-  "cleanUrls": true,
-  "trailingSlash": false
-}
+let limpo = raw.trim();
+  const m = limpo.match(/\{[\s\S]*\}/);
+  if (m) limpo = m[0];
