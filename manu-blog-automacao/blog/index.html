@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" type="image/png" href="https://raw.githubusercontent.com/thaylonv777/Manu__Ia_/main/icon_navegador.png">
+<title>Blog | Manu.ia</title>
+<meta name="description" content="Conteudos sobre CRM com IA, atendimento automatizado e qualificacao de leads no WhatsApp.">
+<link rel="canonical" href="https://www.manuai.com.br/blog/">
+<meta property="og:title" content="Blog | Manu.ia">
+<meta property="og:description" content="Conteudos sobre CRM com IA, atendimento automatizado e qualificacao de leads no WhatsApp.">
+<meta property="og:image" content="https://raw.githubusercontent.com/thaylonv777/Manu__Ia_/main/icon_principal.png">
+<meta property="og:url" content="https://www.manuai.com.br/blog/">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body { font-family: 'Inter', -apple-system, sans-serif; background: #0D0818; color: #fff; -webkit-font-smoothing: antialiased; overflow-x: hidden; }
+:root { --magenta: #D060FF; --magenta-deep: #8A05BE; --grid: rgba(150,80,255,0.04); }
+.grid-bg { background-image: linear-gradient(var(--grid) 1px, transparent 1px), linear-gradient(90deg, var(--grid) 1px, transparent 1px); background-size: 60px 60px; position: fixed; inset: 0; opacity: 0.5; z-index: -1; }
+.orb { position: fixed; top: -200px; left: 50%; transform: translateX(-50%); width: 700px; height: 500px; border-radius: 50%; background: radial-gradient(circle, rgba(208,96,255,0.16) 0%, transparent 65%); filter: blur(50px); z-index: -1; }
+.gradient-text { background: linear-gradient(135deg, #D060FF 0%, #8A05BE 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+header { position: fixed; top: 0; left: 0; right: 0; z-index: 50; padding: 18px 0; transition: all 0.3s; }
+header.scrolled { background: rgba(13,8,24,0.85); backdrop-filter: blur(20px); border-bottom: 1px solid rgba(255,255,255,0.05); }
+.header-inner { max-width: 1100px; margin: 0 auto; padding: 0 24px; display: flex; align-items: center; justify-content: space-between; }
+.nav-back { color: rgba(255,255,255,0.7); text-decoration: none; font-size: 14px; font-weight: 500; display: inline-flex; align-items: center; gap: 6px; transition: color 0.2s; }
+.nav-back:hover { color: #fff; }
+.icon-svg { stroke: #fff; stroke-width: 2; fill: none; stroke-linecap: round; stroke-linejoin: round; }
+.wrap { max-width: 1100px; margin: 0 auto; padding: 150px 24px 80px; }
+.blog-head { max-width: 700px; margin-bottom: 64px; }
+.eyebrow { display: inline-flex; align-items: center; gap: 8px; font-size: 11px; text-transform: uppercase; letter-spacing: 0.15em; font-weight: 600; color: var(--magenta); margin-bottom: 18px; }
+.eyebrow-dot { width: 6px; height: 6px; background: var(--magenta); border-radius: 50%; }
+.blog-head h1 { font-size: clamp(2.2rem, 5vw, 3.4rem); font-weight: 700; line-height: 1.1; letter-spacing: -0.02em; margin-bottom: 18px; }
+.blog-head p { font-size: 1.125rem; color: rgba(255,255,255,0.6); line-height: 1.6; }
+.posts-grid { display: grid; grid-template-columns: 1fr; gap: 20px; }
+@media (min-width: 720px) { .posts-grid { grid-template-columns: repeat(2, 1fr); } }
+.post-card { display: flex; flex-direction: column; padding: 32px; border-radius: 18px; text-decoration: none; color: #fff; background: rgba(255,255,255,0.03); backdrop-filter: blur(14px); border: 1px solid rgba(255,255,255,0.08); transition: border-color 0.3s, transform 0.3s; }
+.post-card:hover { border-color: rgba(208,96,255,0.35); transform: translateY(-4px); }
+.post-date { font-size: 12px; text-transform: uppercase; letter-spacing: 0.08em; color: rgba(255,255,255,0.45); margin-bottom: 14px; }
+.post-title { font-size: 1.35rem; font-weight: 600; line-height: 1.25; margin-bottom: 12px; }
+.post-desc { color: rgba(255,255,255,0.6); line-height: 1.55; font-size: 0.95rem; flex-grow: 1; margin-bottom: 20px; }
+.post-link { display: inline-flex; align-items: center; gap: 6px; color: var(--magenta); font-weight: 600; font-size: 14px; }
+.empty { color: rgba(255,255,255,0.5); font-size: 1rem; }
+footer { padding: 40px 24px; border-top: 1px solid rgba(255,255,255,0.05); margin-top: 60px; }
+.footer-inner { max-width: 1100px; margin: 0 auto; text-align: center; }
+.footer-copy { font-size: 11px; color: rgba(255,255,255,0.4); }
+</style>
+</head>
+<body>
+<div class="grid-bg"></div>
+<div class="orb"></div>
+<header id="header">
+  <div class="header-inner">
+    <a href="/" class="logo"><img src="https://raw.githubusercontent.com/thaylonv777/Manu__Ia_/main/logo_principal_dark-removebg.png" alt="Manu.ia" style="height:30px;width:auto;"></a>
+    <a href="/" class="nav-back">
+      <svg class="icon-svg" style="width:16px;height:16px;"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+      Voltar ao site
+    </a>
+  </div>
+</header>
+<main class="wrap">
+  <div class="blog-head">
+    <span class="eyebrow"><span class="eyebrow-dot"></span>Blog</span>
+    <h1>CRM com IA e <span class="gradient-text">vendas no WhatsApp</span></h1>
+    <p>Conteudos praticos sobre atendimento automatizado, qualificacao de leads e como nao perder oportunidades comerciais.</p>
+  </div>
+  <div class="posts-grid">
+
+      <a class="post-card" href="/blog/crm-para-whatsapp-o-que-e-e-quando-vale-a-pena.html">
+        <span class="post-date">28 de junho de 2026</span>
+        <h2 class="post-title">CRM para WhatsApp: o que e e quando vale a pena</h2>
+        <p class="post-desc">Entenda o que e um CRM para WhatsApp, quais problemas ele resolve no atendimento e como saber se chegou a hora de adotar um no seu time de vendas.</p>
+        <span class="post-link">Ler artigo
+          <svg class="icon-svg" style="width:16px;height:16px;"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </span>
+      </a>
+  </div>
+</main>
+<footer>
+  <div class="footer-inner">
+    <p class="footer-copy">&copy; 2026 Manu.ia &middot; Produto desenvolvido pela Assessoria Atrio</p>
+  </div>
+</footer>
+</body>
+</html>
