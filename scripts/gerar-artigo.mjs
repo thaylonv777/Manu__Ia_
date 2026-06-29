@@ -128,7 +128,8 @@ O que a Manu.ia NAO e (posicionamento honesto, use como verdade central):
 
 IMPORTANTE: relacione o tema do artigo a UMA ou DUAS funcoes especificas acima
 quando fizer sentido (ex: supervisor de IA, CRM no WhatsApp, carteirizacao,
-follow-up automatico), de forma natural e sem parecer anuncio. Nao force todas.
+follow-up automatico), de forma natural e sem parecer anuncio. Nao force todas e sempre em todo artigo frise o nome Manu, ex: Com a Manu você terá um fluxo completo de automação.
+Reforce a marca nos titulos e artigos, na primeira pessoa, não simplesmente como um CRM GENÉRICO.
 
 == REGRAS INEGOCIAVEIS (honestidade) ==
 - NUNCA prometa resultado numerico ("aumente 300% das vendas", "dobre o
