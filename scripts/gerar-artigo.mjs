@@ -102,6 +102,7 @@ Posicionamento honesto da marca (use como verdade central):
 - NUNCA invente telefone, link ou outro canal. O unico CTA e o WhatsApp oficial,
   que ja e inserido pelo site (nao escreva numero de telefone no texto).
 - Tom: claro, direto, profissional, sem jargao vazio e sem "no mundo de hoje".
+- Use acentuacao correta do portugues do Brasil.
 
 == SEO (obrigatorio, nivel profissional) ==
 - O artigo e construido em torno da PALAVRA-CHAVE ALVO informada pelo usuario.
@@ -111,15 +112,19 @@ Posicionamento honesto da marca (use como verdade central):
 - Use variacoes e termos relacionados (semantica) ao longo do texto.
 - Estrutura escaneavel: paragrafos curtos, <h2> e <h3> claros.
 
-== FORMATO DE RESPOSTA ==
-Responda SOMENTE um objeto JSON valido, sem markdown e sem texto fora do JSON:
-{
-  "titulo": "50-65 caracteres, contem a palavra-chave alvo, atrativo",
-  "descricao": "meta description 120-155 caracteres, contem a palavra-chave",
-  "keywords": ["palavra-chave alvo", "+ 4 a 6 termos relacionados"],
-  "leitura": "ex: '5 min'",
-  "corpoHtml": "corpo em HTML semantico"
-}
+== FORMATO DE RESPOSTA (siga EXATAMENTE) ==
+Responda usando EXATAMENTE estes marcadores, nesta ordem, sem nada antes nem
+depois, sem blocos de markdown e SEM JSON:
+===TITULO===
+(titulo de 50-65 caracteres, contendo a palavra-chave alvo)
+===DESCRICAO===
+(meta description de 120-155 caracteres, contendo a palavra-chave)
+===KEYWORDS===
+(palavra-chave alvo, depois 4 a 6 termos relacionados, separados por virgula)
+===LEITURA===
+(ex: 5 min)
+===CORPO===
+(corpo do artigo em HTML semantico)
 
 == REGRAS DO corpoHtml ==
 - Use apenas: <h2>, <h3>, <p>, <ul>, <ol>, <li>, <strong>, <em>.
@@ -137,7 +142,7 @@ ANGULO SUGERIDO: ${alvo.angulo}
 
 Escreva o artigo otimizado para essa palavra-chave, seguindo todas as regras.
 Evite repetir estes titulos ja publicados: ${titulosRecentes.join(' | ') || 'nenhum'}.
-Responda apenas o JSON.`;
+Responda apenas no formato com os marcadores.`;
 
   const resp = await fetch('https://api.anthropic.com/v1/messages', {
     method: 'POST',
@@ -158,12 +163,26 @@ Responda apenas o JSON.`;
 
   const data = await resp.json();
   const raw = (data.content || []).filter((b) => b.type === 'text').map((b) => b.text).join('\n').trim();
-  const limpo = raw.replace(/^```json\s*/i, '').replace(/```$/i, '').trim();
 
-  let artigo;
-  try { artigo = JSON.parse(limpo); }
-  catch { throw new Error('Nao consegui parsear o JSON da IA:\n' + raw); }
-  if (!artigo.titulo || !artigo.corpoHtml) throw new Error('JSON sem titulo ou corpo.');
+  const corte = (txt, ini, fim) => {
+    const a = txt.indexOf(ini);
+    if (a === -1) return '';
+    const start = a + ini.length;
+    const b = fim ? txt.indexOf(fim, start) : -1;
+    return (b === -1 ? txt.slice(start) : txt.slice(start, b)).trim();
+  };
+
+  const artigo = {
+    titulo: corte(raw, '===TITULO===', '===DESCRICAO==='),
+    descricao: corte(raw, '===DESCRICAO===', '===KEYWORDS==='),
+    keywords: corte(raw, '===KEYWORDS===', '===LEITURA===').split(',').map((s) => s.trim()).filter(Boolean),
+    leitura: corte(raw, '===LEITURA===', '===CORPO==='),
+    corpoHtml: corte(raw, '===CORPO===', null),
+  };
+
+  if (!artigo.titulo || !artigo.corpoHtml) {
+    throw new Error('Resposta da IA veio sem titulo ou corpo. Resposta bruta:\n' + raw);
+  }
   return artigo;
 }
 
