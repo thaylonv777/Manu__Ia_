@@ -23,6 +23,7 @@ jobs:
           node-version: 20
 
       - name: Gerar o artigo do dia
+        id: gerar
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
           SITE_URL: https://www.manuai.com.br
@@ -34,19 +35,24 @@ jobs:
         uses: peter-evans/create-pull-request@v6
         with:
           commit-message: "feat(blog): novo artigo automatico"
-          branch: artigo/automatico-${{ github.run_id }}
+          branch: post-${{ github.run_id }}
           delete-branch: true
-          title: "Novo artigo do blog para revisao"
+          title: "Novo artigo: ${{ steps.gerar.outputs.titulo }}"
           body: |
             Artigo gerado automaticamente pela Manu.ia.
 
-            Antes de aprovar, confira:
-            - Titulo e meta description fazem sentido e nao tem erro factual
-            - O texto esta correto, util e sem alucinacao
-            - A secao "Fontes e referencias" esta coerente
+            👀 VER O ARTIGO (preview, bonito):
+            https://manu-2-git-post-${{ github.run_id }}-sete7marketingup-2769s-projects.vercel.app/blog/${{ steps.gerar.outputs.slug }}
 
-            Aprovar este PR publica o artigo (deploy automatico).
-            Fechar o PR sem merge descarta o artigo.
+            (aguarde ~1 min apos abrir o PR para a Vercel terminar o preview)
+
+            Antes de aprovar, confira:
+            - Titulo e meta description fazem sentido
+            - O texto esta correto e util
+            - O CTA do WhatsApp aparece no final
+
+            Aprovar (Merge) publica o artigo.
+            Fechar (Close) sem merge descarta.
           labels: |
             blog
             automatico
