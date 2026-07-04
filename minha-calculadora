@@ -1,0 +1,306 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Calculadora de Custos · API Oficial WhatsApp</title>
+<style>
+  :root{
+    --bg:#0D0818;
+    --bg-panel:#150E28;
+    --line:#2A2140;
+    --magenta-1:#D060FF;
+    --magenta-2:#8A05BE;
+    --text:#F1EDFB;
+    --text-dim:#9C93B8;
+    --ok:#3DDC97;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{
+    background:var(--bg);
+    color:var(--text);
+    font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Arial,sans-serif;
+    min-height:100vh;
+    padding:48px 20px;
+  }
+  .wrap{max-width:760px;margin:0 auto;}
+  .eyebrow{
+    font-family:'Courier New',Consolas,monospace;
+    font-size:12px;
+    letter-spacing:.12em;
+    text-transform:uppercase;
+    color:var(--magenta-1);
+    margin-bottom:10px;
+  }
+  h1{
+    font-size:clamp(26px,4vw,36px);
+    font-weight:800;
+    line-height:1.15;
+    margin-bottom:10px;
+  }
+  .lead{color:var(--text-dim);font-size:15px;max-width:52ch;margin-bottom:36px;}
+
+  .card{
+    background:var(--bg-panel);
+    border:1px solid var(--line);
+    border-radius:16px;
+    padding:28px;
+    margin-bottom:24px;
+  }
+  .block{margin-bottom:28px;}
+  .block:last-child{margin-bottom:0;}
+  .block-title{
+    font-size:13px;
+    font-weight:700;
+    text-transform:uppercase;
+    letter-spacing:.06em;
+    color:var(--text-dim);
+    margin-bottom:16px;
+    display:flex;
+    align-items:center;
+    gap:8px;
+  }
+
+  .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;}
+  @media (max-width:640px){.grid{grid-template-columns:1fr;}}
+
+  .field{
+    background:#0F0A20;
+    border:1px solid var(--line);
+    border-radius:12px;
+    padding:16px;
+  }
+  .field-top{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:4px;}
+  .field-name{font-size:14px;font-weight:600;}
+  .field-rate{font-family:'Courier New',Consolas,monospace;font-size:11px;color:var(--text-dim);margin-bottom:10px;}
+  input[type=range]{
+    width:100%;
+    accent-color:var(--magenta-1);
+    margin-bottom:10px;
+  }
+  input[type=number]{
+    width:100%;
+    background:transparent;
+    border:1px solid var(--line);
+    border-radius:8px;
+    padding:8px 10px;
+    color:var(--text);
+    font-family:'Courier New',Consolas,monospace;
+    font-size:14px;
+  }
+  input[type=number]:focus, input[type=range]:focus{outline:2px solid var(--magenta-1);outline-offset:2px;}
+
+  .toggle-row{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    background:#0F0A20;
+    border:1px solid var(--line);
+    border-radius:12px;
+    padding:16px;
+  }
+  .toggle-label{font-size:14px;font-weight:600;}
+  .toggle-sub{font-size:12px;color:var(--text-dim);margin-top:2px;}
+  .switch{position:relative;width:46px;height:26px;flex-shrink:0;}
+  .switch input{opacity:0;width:0;height:0;}
+  .switch .track{
+    position:absolute;inset:0;background:var(--line);border-radius:999px;
+    transition:.2s;cursor:pointer;
+  }
+  .switch .thumb{
+    position:absolute;width:20px;height:20px;left:3px;top:3px;
+    background:var(--text);border-radius:50%;transition:.2s;
+  }
+  .switch input:checked + .track{background:linear-gradient(90deg,var(--magenta-1),var(--magenta-2));}
+  .switch input:checked + .track .thumb{transform:translateX(20px);}
+
+  .result{
+    background:linear-gradient(155deg,var(--bg-panel),#1B1030);
+    border:1px solid var(--magenta-2);
+    border-radius:16px;
+    padding:28px;
+  }
+  .result-label{font-size:13px;color:var(--text-dim);margin-bottom:6px;}
+  .result-value{
+    font-family:'Courier New',Consolas,monospace;
+    font-size:clamp(34px,6vw,44px);
+    font-weight:700;
+    background:linear-gradient(90deg,var(--magenta-1),var(--magenta-2));
+    -webkit-background-clip:text;
+    background-clip:text;
+    color:transparent;
+    margin-bottom:20px;
+  }
+  .breakdown{border-top:1px solid var(--line);padding-top:16px;}
+  .breakdown-row{
+    display:flex;justify-content:space-between;
+    font-size:13px;padding:6px 0;color:var(--text-dim);
+  }
+  .breakdown-row strong{color:var(--text);font-family:'Courier New',Consolas,monospace;font-weight:400;}
+  .breakdown-row.total{
+    border-top:1px solid var(--line);
+    margin-top:6px;padding-top:12px;
+    color:var(--text);font-weight:700;
+  }
+  .breakdown-row.total strong{font-weight:700;}
+
+  footer{margin-top:24px;font-size:12px;color:var(--text-dim);line-height:1.5;}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="eyebrow">Simulador · API Oficial WhatsApp</div>
+  <h1>Quanto sua operação vai gastar por mês?</h1>
+  <p class="lead">Ajuste os volumes de atendimento e disparo abaixo para estimar o custo mensal com as tarifas por mensagem.</p>
+
+  <div class="card">
+
+    <div class="block">
+      <div class="block-title">💬 Atendimento inbound</div>
+      <div class="grid" style="grid-template-columns:1fr 1fr;">
+        <div class="field">
+          <div class="field-top"><span class="field-name">Clientes / mês</span><span class="field-rate" id="clientes-val">500</span></div>
+          <input type="range" id="clientes" min="10" max="10000" step="10" value="500">
+          <input type="number" id="clientes-number" min="10" max="99999" value="500">
+        </div>
+        <div class="field">
+          <div class="field-top"><span class="field-name">Msgs / cliente</span><span class="field-rate" id="mensagens-val">10</span></div>
+          <input type="range" id="mensagens" min="1" max="100" step="1" value="10">
+          <input type="number" id="mensagens-number" min="1" max="9999" value="10">
+        </div>
+      </div>
+      <div class="field-rate" style="margin-top:10px;">Tarifa: R$ 0,0353 / mensagem</div>
+    </div>
+
+    <div class="block">
+      <div class="block-title">📤 Disparos outbound</div>
+      <div class="grid">
+        <div class="field">
+          <div class="field-top"><span class="field-name">📣 Marketing</span></div>
+          <div class="field-rate">R$ 0,3217 / disparo</div>
+          <input type="range" id="marketing" min="0" max="50000" step="100" value="0">
+          <input type="number" id="marketing-number" min="0" max="999999" value="0">
+        </div>
+        <div class="field">
+          <div class="field-top"><span class="field-name">📦 Utilidade</span></div>
+          <div class="field-rate">R$ 0,0350 / disparo</div>
+          <input type="range" id="utilidade" min="0" max="50000" step="100" value="0">
+          <input type="number" id="utilidade-number" min="0" max="999999" value="0">
+        </div>
+        <div class="field">
+          <div class="field-top"><span class="field-name">🔐 Autenticação</span></div>
+          <div class="field-rate">R$ 0,0350 / disparo</div>
+          <input type="range" id="autenticacao" min="0" max="50000" step="100" value="0">
+          <input type="number" id="autenticacao-number" min="0" max="999999" value="0">
+        </div>
+      </div>
+    </div>
+
+    <div class="block">
+      <div class="toggle-row">
+        <div>
+          <div class="toggle-label">🤖 Usa agente de IA no atendimento?</div>
+          <div class="toggle-sub">adiciona ~R$ 0,23 por resposta gerada por IA</div>
+        </div>
+        <label class="switch">
+          <input type="checkbox" id="usaIA">
+          <span class="track"><span class="thumb"></span></span>
+        </label>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="result">
+    <div class="result-label">Custo mensal estimado</div>
+    <div class="result-value" id="total-value">R$ 0,00</div>
+    <div class="breakdown">
+      <div class="breakdown-row" id="row-atendimento" hidden><span>Atendimento (inbound)</span><strong id="v-atendimento">R$ 0,00</strong></div>
+      <div class="breakdown-row" id="row-marketing" hidden><span>Marketing</span><strong id="v-marketing">R$ 0,00</strong></div>
+      <div class="breakdown-row" id="row-utilidade" hidden><span>Utilidade</span><strong id="v-utilidade">R$ 0,00</strong></div>
+      <div class="breakdown-row" id="row-autenticacao" hidden><span>Autenticação</span><strong id="v-autenticacao">R$ 0,00</strong></div>
+      <div class="breakdown-row" id="row-ia" hidden><span>IA (por resposta)</span><strong id="v-ia">R$ 0,00</strong></div>
+      <div class="breakdown-row total"><span>Total</span><strong id="v-total">R$ 0,00</strong></div>
+    </div>
+  </div>
+
+  <footer>
+    * Simulação com base nas tarifas por mensagem anunciadas pela Meta. Marketing, utilidade e autenticação já em vigor; a cobrança das respostas inbound (atendimento) entra em vigor em 1º de outubro de 2026. O custo de IA é uma média estimada por resposta; valores reais variam conforme volume e complexidade.
+  </footer>
+
+</div>
+
+<script>
+(function(){
+  const RATES = {
+    inbound: 0.0353,
+    marketing: 0.3217,
+    utilidade: 0.0350,
+    autenticacao: 0.0350,
+    ia: 0.23
+  };
+
+  const ids = ['clientes','mensagens','marketing','utilidade','autenticacao'];
+  const fmt = v => 'R$ ' + v.toLocaleString('pt-BR', {minimumFractionDigits:2, maximumFractionDigits:2});
+
+  function sync(id){
+    const range = document.getElementById(id);
+    const number = document.getElementById(id+'-number');
+    const setFrom = (val) => {
+      range.value = val;
+      number.value = val;
+      const valEl = document.getElementById(id+'-val');
+      if(valEl) valEl.textContent = Number(val).toLocaleString('pt-BR');
+      calculate();
+    };
+    range.addEventListener('input', () => setFrom(range.value));
+    number.addEventListener('input', () => setFrom(number.value || 0));
+  }
+
+  function calculate(){
+    const clientes = Number(document.getElementById('clientes-number').value) || 0;
+    const mensagens = Number(document.getElementById('mensagens-number').value) || 0;
+    const marketing = Number(document.getElementById('marketing-number').value) || 0;
+    const utilidade = Number(document.getElementById('utilidade-number').value) || 0;
+    const autenticacao = Number(document.getElementById('autenticacao-number').value) || 0;
+    const usaIA = document.getElementById('usaIA').checked;
+
+    const totalMsgsInbound = clientes * mensagens;
+    const custoAtendimento = totalMsgsInbound * RATES.inbound;
+    const custoMarketing = marketing * RATES.marketing;
+    const custoUtilidade = utilidade * RATES.utilidade;
+    const custoAutenticacao = autenticacao * RATES.autenticacao;
+    const custoIA = usaIA ? totalMsgsInbound * RATES.ia : 0;
+
+    const total = custoAtendimento + custoMarketing + custoUtilidade + custoAutenticacao + custoIA;
+
+    document.getElementById('total-value').textContent = fmt(total);
+    document.getElementById('v-total').textContent = fmt(total);
+
+    toggleRow('atendimento', custoAtendimento);
+    toggleRow('marketing', custoMarketing);
+    toggleRow('utilidade', custoUtilidade);
+    toggleRow('autenticacao', custoAutenticacao);
+    toggleRow('ia', custoIA);
+  }
+
+  function toggleRow(name, value){
+    const row = document.getElementById('row-'+name);
+    const val = document.getElementById('v-'+name);
+    if(value > 0){
+      row.hidden = false;
+      val.textContent = fmt(value);
+    } else {
+      row.hidden = true;
+    }
+  }
+
+  ids.forEach(sync);
+  document.getElementById('usaIA').addEventListener('change', calculate);
+  calculate();
+})();
+</script>
+</body>
+</html>
