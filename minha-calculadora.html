@@ -113,21 +113,6 @@
   }
   input[type=number]:focus, input[type=range]:focus{outline:2px solid var(--magenta-1);outline-offset:2px;}
 
-  .toggle-row{
-    display:flex;align-items:center;justify-content:space-between;gap:16px;
-    background:rgba(255,255,255,0.025);
-    border:1px solid rgba(255,255,255,0.08);
-    border-radius:14px;padding:18px;
-  }
-  .toggle-label{font-size:14px;font-weight:600;}
-  .toggle-sub{font-size:12px;color:var(--text-dim);margin-top:2px;}
-  .switch{position:relative;width:46px;height:26px;flex-shrink:0;}
-  .switch input{opacity:0;width:0;height:0;}
-  .switch .track{position:absolute;inset:0;background:rgba(255,255,255,0.15);border-radius:999px;transition:.2s;cursor:pointer;}
-  .switch .thumb{position:absolute;width:20px;height:20px;left:3px;top:3px;background:#fff;border-radius:50%;transition:.2s;}
-  .switch input:checked + .track{background:linear-gradient(90deg,var(--magenta-1),var(--magenta-2));}
-  .switch input:checked + .track .thumb{transform:translateX(20px);}
-
   .result{
     background:linear-gradient(160deg, rgba(208,96,255,0.08), rgba(138,5,190,0.03));
     border:1px solid rgba(208,96,255,0.25);
@@ -155,7 +140,7 @@
   .note{margin-top:24px;font-size:12px;color:rgba(255,255,255,0.35);line-height:1.6;text-align:center;}
 
   @media (prefers-reduced-motion:no-preference){
-    .field, .toggle-row{transition:border-color .2s, transform .2s;}
+    .field{transition:border-color .2s, transform .2s;}
   }
 </style>
 </head>
@@ -219,19 +204,6 @@
       </div>
     </div>
 
-    <div class="block">
-      <div class="toggle-row">
-        <div>
-          <div class="toggle-label">🤖 Usa agente de IA no atendimento?</div>
-          <div class="toggle-sub">adiciona ~R$ 0,23 por resposta gerada por IA</div>
-        </div>
-        <label class="switch">
-          <input type="checkbox" id="usaIA">
-          <span class="track"><span class="thumb"></span></span>
-        </label>
-      </div>
-    </div>
-
   </div>
 
   <div class="result">
@@ -242,12 +214,11 @@
       <div class="breakdown-row" id="row-marketing" hidden><span>Marketing</span><strong id="v-marketing">R$ 0,00</strong></div>
       <div class="breakdown-row" id="row-utilidade" hidden><span>Utilidade</span><strong id="v-utilidade">R$ 0,00</strong></div>
       <div class="breakdown-row" id="row-autenticacao" hidden><span>Autenticação</span><strong id="v-autenticacao">R$ 0,00</strong></div>
-      <div class="breakdown-row" id="row-ia" hidden><span>IA (por resposta)</span><strong id="v-ia">R$ 0,00</strong></div>
       <div class="breakdown-row total"><span>Total</span><strong id="v-total">R$ 0,00</strong></div>
     </div>
   </div>
 
-  <p class="note">* Simulação com base nas tarifas por mensagem anunciadas pela Meta. Marketing, utilidade e autenticação já em vigor; a cobrança das respostas inbound (atendimento) entra em vigor em 1º de outubro de 2026. O custo de IA é uma média estimada por resposta; valores reais variam conforme volume e complexidade.</p>
+  <p class="note">* Simulação com base nas tarifas por mensagem anunciadas pela Meta. Marketing, utilidade e autenticação já em vigor; a cobrança das respostas inbound (atendimento) entra em vigor em 1º de outubro de 2026.</p>
 
 </div>
 
@@ -257,8 +228,7 @@
     inbound: 0.0353,
     marketing: 0.3217,
     utilidade: 0.0350,
-    autenticacao: 0.0350,
-    ia: 0.23
+    autenticacao: 0.0350
   };
 
   const ids = ['clientes','mensagens','marketing','utilidade','autenticacao'];
@@ -284,16 +254,14 @@
     const marketing = Number(document.getElementById('marketing-number').value) || 0;
     const utilidade = Number(document.getElementById('utilidade-number').value) || 0;
     const autenticacao = Number(document.getElementById('autenticacao-number').value) || 0;
-    const usaIA = document.getElementById('usaIA').checked;
 
     const totalMsgsInbound = clientes * mensagens;
     const custoAtendimento = totalMsgsInbound * RATES.inbound;
     const custoMarketing = marketing * RATES.marketing;
     const custoUtilidade = utilidade * RATES.utilidade;
     const custoAutenticacao = autenticacao * RATES.autenticacao;
-    const custoIA = usaIA ? totalMsgsInbound * RATES.ia : 0;
 
-    const total = custoAtendimento + custoMarketing + custoUtilidade + custoAutenticacao + custoIA;
+    const total = custoAtendimento + custoMarketing + custoUtilidade + custoAutenticacao;
 
     document.getElementById('total-value').textContent = fmt(total);
     document.getElementById('v-total').textContent = fmt(total);
@@ -302,7 +270,6 @@
     toggleRow('marketing', custoMarketing);
     toggleRow('utilidade', custoUtilidade);
     toggleRow('autenticacao', custoAutenticacao);
-    toggleRow('ia', custoIA);
   }
 
   function toggleRow(name, value){
@@ -317,7 +284,6 @@
   }
 
   ids.forEach(sync);
-  document.getElementById('usaIA').addEventListener('change', calculate);
   calculate();
 })();
 </script>
