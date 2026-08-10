@@ -88,10 +88,12 @@
 }
 </script>
 
-<!-- ============ PRECONNECT ============ -->
+<!-- ============ PRECONNECT + FONTS ASYNC ============ -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" media="print" onload="this.media='all'">
+<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"></noscript>
 
 <!-- ============ META PIXEL (async, não bloqueia render) ============ -->
 <script>
@@ -268,7 +270,7 @@ footer { padding: 48px 24px; border-top: 1px solid rgba(255,255,255,0.05); }
 <header id="header">
   <div class="header-inner">
     <a href="#" class="logo">
-      <img src="/logo_principal_dark-removebg.png" alt="Manu.ia" style="height:32px;width:auto;">
+      <img src="/logo_principal_dark-removebg.png" alt="Manu.ia - CRM com IA para WhatsApp" width="128" height="32" style="height:32px;width:auto;">
     </a>
     <nav>
       <a href="#sobre">Como funciona</a>
@@ -440,7 +442,7 @@ footer { padding: 48px 24px; border-top: 1px solid rgba(255,255,255,0.05); }
 <footer>
   <div class="footer-inner">
    <div class="logo">
-      <img src="/logo_principal_dark-removebg.png" alt="Manu.ia" style="height:28px;width:auto;">
+      <img src="/logo_principal_dark-removebg.png" alt="Manu.ia" width="112" height="28" style="height:28px;width:auto;">
     </div>
   <p class="footer-copy">© 2026 Manu.ia · Produto desenvolvido pela Assessoria Átrio</p>
     <p class="footer-copy"><a href="/blog/" style="color:inherit;opacity:0.7;text-decoration:none;">Blog</a></p>
