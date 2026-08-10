@@ -1,23 +1,30 @@
-# robots.txt - Thaylon Aulas Particulares de Tráfego Pago
-# https://www.thaylonvieira.online/
+# robots.txt - Manu.ia
+# https://www.manuai.com.br/
 
 User-agent: *
 Allow: /
+Disallow: /minha-calculadora.html
 
-# Permitir que bots do Google indexem imagens
-User-agent: Googlebot-Image
-Allow: /
-
-# Permitir bots do Bing
-User-agent: Bingbot
-Allow: /
-
-# Bloquear bots indesejados (opcional - bots agressivos de scraping)
+# Bots agressivos de scraping SEO
 User-agent: AhrefsBot
 Crawl-delay: 10
 
 User-agent: SemrushBot
 Crawl-delay: 10
 
+User-agent: MJ12bot
+Crawl-delay: 10
+
+User-agent: DotBot
+Disallow: /
+
+# Bots de IA (opcional - descomente se NÃO quiser que seu conteúdo treine modelos)
+# User-agent: GPTBot
+# Disallow: /
+# User-agent: ClaudeBot
+# Disallow: /
+# User-agent: CCBot
+# Disallow: /
+
 # Sitemap
-Sitemap: https://www.thaylonvieira.online/sitemap.xml
+Sitemap: https://www.manuai.com.br/sitemap.xml
