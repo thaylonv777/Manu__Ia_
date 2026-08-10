@@ -39,9 +39,9 @@ const BLOG_DIR = path.join(ROOT, 'blog');
 const POSTS_JSON = path.join(BLOG_DIR, 'posts.json');
 const SITEMAP = path.join(ROOT, 'sitemap.xml');
 
-const LOGO = 'https://raw.githubusercontent.com/thaylonv777/Manu__Ia_/main/logo_principal_dark-removebg.png';
-const OG_IMAGE = 'https://raw.githubusercontent.com/thaylonv777/Manu__Ia_/main/icon_principal.png';
-const FAVICON = 'https://raw.githubusercontent.com/thaylonv777/Manu__Ia_/main/icon_navegador.png';
+const LOGO = `${SITE_URL}/logo_principal_dark-removebg.png`;
+const OG_IMAGE = `${SITE_URL}/og-image.png`;
+const FAVICON = `${SITE_URL}/icon_navegador.png`;
 const WHATSAPP = 'https://wa.me/5551993933653?text=Ol%C3%A1!%20Tenho%20interesse%20na%20Manu.ia.';
 
 const IMAGENS = [
@@ -335,7 +335,7 @@ Evite repetir estes titulos ja publicados: ${titulosRecentes.join(' | ') || 'nen
 // ---------- Render do artigo (com internal linking + schema enriquecido) ----------
 function renderArtigo(artigo, slug, dataISO, relacionados) {
   const url = `${SITE_URL}/blog/${slug}`;
-  const heroImg = artigo.imagem ? `${SITE_URL}/${artigo.imagem}.png` : '';
+  const heroImg = artigo.imagem ? `${SITE_URL}/${artigo.imagem}.webp` : '';
   const ogImg = heroImg || OG_IMAGE;
   const titulo = escapeHtml(artigo.titulo);
   const descricao = escapeHtml(artigo.descricao);
