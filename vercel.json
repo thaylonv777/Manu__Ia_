@@ -1,1 +1,181 @@
-{ "cleanUrls": true }
+{
+  "cleanUrls": true,
+  "trailingSlash": false,
+  "redirects": [
+    {
+      "source": "/blog/automacao-de-atendimento-whatsapp-do-primeiro-oi-ao-lead-qualificado-ez1y",
+      "destination": "/blog/automacao-de-atendimento-whatsapp-do-primeiro-oi-ao-lead-qualificado",
+      "permanent": true
+    },
+    {
+      "source": "/blog/automacao-de-atendimento-whatsapp-do-primeiro-oi-ao-lead-qualificado-69xx",
+      "destination": "/blog/automacao-de-atendimento-whatsapp-do-primeiro-oi-ao-lead-qualificado",
+      "permanent": true
+    },
+    {
+      "source": "/blog/automacao-de-atendimento-whatsapp-do-primeiro-oi-ao-lead-qualificado-6k9i",
+      "destination": "/blog/automacao-de-atendimento-whatsapp-do-primeiro-oi-ao-lead-qualificado",
+      "permanent": true
+    },
+    {
+      "source": "/blog/crm-vendas-whatsapp-como-fechar-mais-sem-perder-o-fio-9xug",
+      "destination": "/blog/crm-vendas-whatsapp-feche-mais-sem-perder-o-fio-da-meada",
+      "permanent": true
+    },
+    {
+      "source": "/blog/crm-vendas-whatsapp-feche-mais-sem-perder-nenhum-lead",
+      "destination": "/blog/crm-vendas-whatsapp-feche-mais-sem-perder-o-fio-da-meada",
+      "permanent": true
+    },
+    {
+      "source": "/blog/crm-vendas-whatsapp-como-fechar-mais-sem-perder-o-fio",
+      "destination": "/blog/crm-vendas-whatsapp-feche-mais-sem-perder-o-fio-da-meada",
+      "permanent": true
+    },
+    {
+      "source": "/blog/crm-com-ia-o-que-muda-no-atendimento-e-nas-vendas-m6hw",
+      "destination": "/blog/crm-com-ia-o-que-muda-no-atendimento-e-nas-vendas",
+      "permanent": true
+    },
+    {
+      "source": "/blog/crm-com-ia-o-que-muda-no-atendimento-e-nas-vendas-ogg0",
+      "destination": "/blog/crm-com-ia-o-que-muda-no-atendimento-e-nas-vendas",
+      "permanent": true
+    },
+    {
+      "source": "/blog/crm-com-ia-o-que-muda-no-atendimento-e-nas-vendas-o2hv",
+      "destination": "/blog/crm-com-ia-o-que-muda-no-atendimento-e-nas-vendas",
+      "permanent": true
+    },
+    {
+      "source": "/blog/crm-integrado-com-whatsapp-fim-das-planilhas-no-comercial-i14r",
+      "destination": "/blog/crm-integrado-com-whatsapp-chega-de-planilha-no-comercial",
+      "permanent": true
+    },
+    {
+      "source": "/blog/crm-integrado-com-whatsapp-fim-das-planilhas-no-comercial",
+      "destination": "/blog/crm-integrado-com-whatsapp-chega-de-planilha-no-comercial",
+      "permanent": true
+    },
+    {
+      "source": "/blog/crm-integrado-com-whatsapp-chega-de-planilha-no-atendimento",
+      "destination": "/blog/crm-integrado-com-whatsapp-chega-de-planilha-no-comercial",
+      "permanent": true
+    },
+    {
+      "source": "/blog/whatsapp-automatizado-o-que-automatizar-sem-robotizar-yk52",
+      "destination": "/blog/whatsapp-automatizado-o-que-automatizar-sem-robotizar",
+      "permanent": true
+    },
+    {
+      "source": "/blog/whatsapp-automatizado-o-que-automatizar-sem-robotizar-k7l6",
+      "destination": "/blog/whatsapp-automatizado-o-que-automatizar-sem-robotizar",
+      "permanent": true
+    },
+    {
+      "source": "/blog/whatsapp-automatizado-o-que-automatizar-sem-robotizar-2rno",
+      "destination": "/blog/whatsapp-automatizado-o-que-automatizar-sem-robotizar",
+      "permanent": true
+    },
+    {
+      "source": "/blog/crm-e-atendimento-whatsapp-unificados-em-um-so-lugar-k1xw",
+      "destination": "/blog/crm-atendimento-whatsapp-gestao-completa-em-um-so-lugar",
+      "permanent": true
+    },
+    {
+      "source": "/blog/crm-e-atendimento-whatsapp-unificados-em-um-so-lugar",
+      "destination": "/blog/crm-atendimento-whatsapp-gestao-completa-em-um-so-lugar",
+      "permanent": true
+    },
+    {
+      "source": "/blog/crm-de-atendimento-no-whatsapp-organize-tudo-em-um-lugar",
+      "destination": "/blog/crm-atendimento-whatsapp-gestao-completa-em-um-so-lugar",
+      "permanent": true
+    },
+    {
+      "source": "/blog/crm-para-whatsapp-o-que-e-para-que-serve-e-quando-usar-tso3",
+      "destination": "/blog/crm-para-whatsapp-o-que-e-para-que-serve-e-quando-usar",
+      "permanent": true
+    },
+    {
+      "source": "/blog/crm-para-whatsapp-o-que-e-para-que-serve-e-quando-usar-z9k7",
+      "destination": "/blog/crm-para-whatsapp-o-que-e-para-que-serve-e-quando-usar",
+      "permanent": true
+    },
+    {
+      "source": "/blog/crm-para-whatsapp-o-que-e-e-quando-vale-a-pena",
+      "destination": "/blog/crm-para-whatsapp-o-que-e-para-que-serve-e-quando-usar",
+      "permanent": true
+    },
+    {
+      "source": "/blog/ia-para-qualificacao-de-leads-separe-curioso-de-comprador-z7nt",
+      "destination": "/blog/ia-para-qualificacao-de-leads-separe-curiosos-de-compradores",
+      "permanent": true
+    },
+    {
+      "source": "/blog/ia-para-qualificacao-de-leads-separe-curioso-de-comprador",
+      "destination": "/blog/ia-para-qualificacao-de-leads-separe-curiosos-de-compradores",
+      "permanent": true
+    },
+    {
+      "source": "/blog/crm-whatsapp-centralize-conversas-e-preserve-o-historico-df2d",
+      "destination": "/blog/crm-whatsapp-centralize-conversas-e-nunca-perca-o-historico",
+      "permanent": true
+    },
+    {
+      "source": "/blog/crm-whatsapp-centralize-conversas-e-preserve-o-historico",
+      "destination": "/blog/crm-whatsapp-centralize-conversas-e-nunca-perca-o-historico",
+      "permanent": true
+    },
+    {
+      "source": "/blog/automacao-de-atendimento-com-ia-24h-sem-perder-o-tom-humano-9wyz",
+      "destination": "/blog/automacao-de-atendimento-com-ia-24h-sem-perder-o-tom-humano",
+      "permanent": true
+    },
+    {
+      "source": "/blog/automacao-de-atendimento-com-ia-24h-sem-perder-o-tom-humano-1891",
+      "destination": "/blog/automacao-de-atendimento-com-ia-24h-sem-perder-o-tom-humano",
+      "permanent": true
+    },
+    {
+      "source": "/blog/agente-de-ia-no-whatsapp-o-que-ele-faz-e-o-que-nao-faz-nu5r",
+      "destination": "/blog/agente-de-ia-no-whatsapp-o-que-ele-faz-e-o-que-nao-faz",
+      "permanent": true
+    },
+    {
+      "source": "/blog/agente-de-ia-no-whatsapp-o-que-ele-faz-e-o-que-nao-faz-egg0",
+      "destination": "/blog/agente-de-ia-no-whatsapp-o-que-ele-faz-e-o-que-nao-faz",
+      "permanent": true
+    },
+    {
+      "source": "/blog/chatbot-com-ia-para-whatsapp-alem-das-respostas-automaticas",
+      "destination": "/blog/chatbot-com-ia-para-whatsapp-alem-dos-menus-e-regras-fixas",
+      "permanent": true
+    },
+    {
+      "source": "/blog/chatbot-com-ia-para-whatsapp-alem-das-respostas-prontas",
+      "destination": "/blog/chatbot-com-ia-para-whatsapp-alem-dos-menus-e-regras-fixas",
+      "permanent": true
+    },
+    {
+      "source": "/blog/atendimento-automatizado-no-whatsapp-o-custo-do-silencio-xpnv",
+      "destination": "/blog/atendimento-automatizado-no-whatsapp-o-custo-do-silencio",
+      "permanent": true
+    },
+    {
+      "source": "/blog/atendimento-automatizado-no-whatsapp-o-custo-do-silencio-ut68",
+      "destination": "/blog/atendimento-automatizado-no-whatsapp-o-custo-do-silencio",
+      "permanent": true
+    },
+    {
+      "source": "/blog/melhor-crm-whatsapp-criterios-para-escolher-o-certo-cx8d",
+      "destination": "/blog/melhor-crm-whatsapp-7-criterios-para-escolher-o-certo",
+      "permanent": true
+    },
+    {
+      "source": "/blog/melhor-crm-whatsapp-criterios-para-escolher-o-certo",
+      "destination": "/blog/melhor-crm-whatsapp-7-criterios-para-escolher-o-certo",
+      "permanent": true
+    }
+  ]
+}
