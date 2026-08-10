@@ -88,11 +88,10 @@
 }
 </script>
 
-<!-- ============ PRECONNECT + FONTS ASYNC ============ -->
+<!-- ============ FONT (Inter async) ============ -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" media="print" onload="this.media='all'">
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" onload="this.rel='stylesheet'">
 <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"></noscript>
 
 <!-- ============ META PIXEL (async, não bloqueia render) ============ -->
@@ -171,7 +170,7 @@ nav a:hover { color: #fff; }
 .badge { display: inline-flex; align-items: center; gap: 8px; padding: 6px 16px; border-radius: 9999px; font-size: 11px; text-transform: uppercase; letter-spacing: 0.1em; color: rgba(255,255,255,0.8); margin-bottom: 32px; }
 .badge-dot { width: 6px; height: 6px; background: #D060FF; border-radius: 50%; animation: ping 2s infinite; }
 @keyframes ping { 0% { opacity: 1; } 75%, 100% { opacity: 0; transform: scale(2); } }
-h1 { font-size: clamp(2.5rem, 6vw, 4.5rem); font-weight: 700; line-height: 1.05; letter-spacing: -0.02em; margin-bottom: 24px; }
+h1 { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Inter', sans-serif; font-size: clamp(2.5rem, 6vw, 4.5rem); font-weight: 700; line-height: 1.05; letter-spacing: -0.02em; margin-bottom: 24px; }
 .hero-subtitle { font-size: clamp(1rem, 1.5vw, 1.25rem); color: rgba(255,255,255,0.6); max-width: 600px; margin: 0 auto 40px; line-height: 1.55; }
 .hero-buttons { display: flex; flex-direction: column; gap: 16px; justify-content: center; align-items: center; }
 @media (min-width: 640px) { .hero-buttons { flex-direction: row; } }
