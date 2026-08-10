@@ -1,14 +1,19 @@
 #!/usr/bin/env node
 /**
- * gerar-artigo.mjs
+ * gerar-artigo.mjs (v2 - SEO fix)
  * --------------------------------------------------------------
- * Gera 1 artigo por dia para o blog da Manu.ia usando a API da Anthropic.
- * Cada artigo:
- *   - e construido em cima de uma palavra-chave real (lista KEYWORDS)
- *   - segue a voz da marca (site + Instagram da Manu.ia)
- *   - tem SEO profissional (titulo, meta, headings, uso da keyword)
- *   - termina com CTA para o WhatsApp oficial (mesmo numero do site)
- *   - NUNCA promete resultado nem inventa dado/funcionalidade
+ * MUDANCAS CRITICAS vs v1:
+ *   1. BUG FIX: se o slug ja existe, PULA em vez de criar duplicata
+ *      (era isso que gerava -egg0, -yk52, etc)
+ *   2. Anti-canibalizacao: se a keyword ja foi usada nos ultimos
+ *      MIN_DIAS_ENTRE_KEYWORD dias, pula
+ *   3. Lista de KEYWORDS expandida (14 -> 40+ long-tail)
+ *   4. Bloco "Artigos relacionados" adicionado ao fim de cada post
+ *      (internal linking automatico baseado em posts.json existente)
+ *   5. Schema.org enriquecido: Article + BreadcrumbList, com
+ *      wordCount, inLanguage, articleSection
+ *   6. Se todas as keywords foram usadas nos ultimos N dias,
+ *      script encerra graciosamente (nao gera nada)
  *
  * Uso em CI:  node scripts/gerar-artigo.mjs   (precisa de ANTHROPIC_API_KEY)
  * Teste local sem API:
@@ -26,6 +31,9 @@ const API_KEY = process.env.ANTHROPIC_API_KEY;
 const MODEL = process.env.ANTHROPIC_MODEL || 'claude-sonnet-4-6';
 const ARTIGO_LOCAL = process.env.ARTIGO_LOCAL;
 
+// Anti-canibalizacao: nao repetir a mesma keyword em menos de X dias
+const MIN_DIAS_ENTRE_KEYWORD = parseInt(process.env.MIN_DIAS_ENTRE_KEYWORD || '30', 10);
+
 const ROOT = process.cwd();
 const BLOG_DIR = path.join(ROOT, 'blog');
 const POSTS_JSON = path.join(BLOG_DIR, 'posts.json');
@@ -34,11 +42,8 @@ const SITEMAP = path.join(ROOT, 'sitemap.xml');
 const LOGO = 'https://raw.githubusercontent.com/thaylonv777/Manu__Ia_/main/logo_principal_dark-removebg.png';
 const OG_IMAGE = 'https://raw.githubusercontent.com/thaylonv777/Manu__Ia_/main/icon_principal.png';
 const FAVICON = 'https://raw.githubusercontent.com/thaylonv777/Manu__Ia_/main/icon_navegador.png';
-// CTA oficial - mesmo numero do site. NAO mudar sem mudar no site.
 const WHATSAPP = 'https://wa.me/5551993933653?text=Ol%C3%A1!%20Tenho%20interesse%20na%20Manu.ia.';
 
-// Banco de imagens (arquivos .png na raiz do repo). A IA escolhe por tema,
-// ou deixa vazio quando nenhuma combina. Repetir entre artigos e permitido.
 const IMAGENS = [
   { arq: 'plataforma-completa', desc: 'visao geral da plataforma Manu.ia (uso geral)' },
   { arq: 'central-de-atendimento', desc: 'central de atendimento unificado / caixa de conversas' },
@@ -50,10 +55,9 @@ const IMAGENS = [
 ];
 const IMAGENS_VALIDAS = IMAGENS.map((i) => i.arq);
 
-// ---------- Palavras-chave alvo (1 artigo = 1 keyword) ----------
-// Filtradas por volume/intencao. Sem concorrentes, sem "gratis".
-// "angulo" e so um norte para a IA; ela escreve o titulo final.
+// ---------- Palavras-chave alvo (expandida: 40+ long-tail) ----------
 const KEYWORDS = [
+  // === Keywords originais (mantidas) ===
   { kw: 'crm para whatsapp', angulo: 'o que e, para que serve e quando faz sentido para um time de vendas' },
   { kw: 'crm whatsapp', angulo: 'como centralizar conversas e nao perder o historico do cliente' },
   { kw: 'crm com ia', angulo: 'o que muda quando o crm tem inteligencia artificial no atendimento' },
@@ -68,6 +72,38 @@ const KEYWORDS = [
   { kw: 'crm vendas whatsapp', angulo: 'como o crm ajuda o time de vendas a fechar mais pelo whatsapp' },
   { kw: 'crm atendimento whatsapp', angulo: 'organizar atendimento e gestao das conversas em um lugar so' },
   { kw: 'atendimento automatizado no whatsapp', angulo: 'o custo do silencio e da demora para responder um lead' },
+
+  // === Novas keywords long-tail (baixa concorrencia, alta intencao) ===
+  { kw: 'follow up automatico whatsapp', angulo: 'como manter o lead aquecido sem depender da memoria do vendedor' },
+  { kw: 'qualificacao de leads whatsapp', angulo: 'processo para entregar so lead pronto pro vendedor humano' },
+  { kw: 'atendimento 24 horas whatsapp', angulo: 'como cobrir madrugada e fim de semana sem contratar plantao' },
+  { kw: 'whatsapp api oficial', angulo: 'diferenca entre whatsapp business normal e api oficial da meta' },
+  { kw: 'multiatendimento whatsapp', angulo: 'como varios atendentes usarem um so numero sem confusao' },
+  { kw: 'disparo em massa whatsapp', angulo: 'como fazer campanhas sem tomar ban da meta' },
+  { kw: 'chatbot whatsapp para empresas', angulo: 'quando faz sentido implementar chatbot no comercial' },
+  { kw: 'automacao de vendas whatsapp', angulo: 'onde a automacao entra no funil de vendas sem substituir o vendedor' },
+  { kw: 'agente de ia para vendas', angulo: 'como um agente de ia atua no pre-venda e handoff pro humano' },
+  { kw: 'gestao de atendimento whatsapp', angulo: 'metricas e visibilidade que gestor precisa ter do atendimento' },
+  { kw: 'central de atendimento whatsapp', angulo: 'como estruturar central de atendimento no whatsapp com filas e distribuicao' },
+  { kw: 'crm para pequenas empresas whatsapp', angulo: 'crm de whatsapp para pequeno negocio: quando vale a pena' },
+  { kw: 'ia no atendimento ao cliente', angulo: 'onde a ia melhora o atendimento e onde ela ainda nao substitui humano' },
+  { kw: 'tempo de resposta whatsapp', angulo: 'impacto do tempo de resposta na taxa de conversao de leads' },
+  { kw: 'lead frio whatsapp', angulo: 'por que o lead esfria e como reaquecer com follow-up automatico' },
+  { kw: 'funil de vendas whatsapp', angulo: 'como estruturar funil de vendas dentro do whatsapp' },
+  { kw: 'integracao whatsapp crm', angulo: 'o que ganhar quando o whatsapp e o crm falam a mesma lingua' },
+  { kw: 'nao perder lead whatsapp', angulo: 'principais razoes pelas quais leads se perdem no whatsapp e como evitar' },
+  { kw: 'vendas pelo whatsapp', angulo: 'boas praticas para vender pelo whatsapp com processo estruturado' },
+  { kw: 'crm com whatsapp integrado', angulo: 'diferenca entre crm generico e crm nativo do whatsapp' },
+  { kw: 'ia conversacional whatsapp', angulo: 'o que e ia conversacional aplicada ao whatsapp e o que ela consegue fazer' },
+  { kw: 'sequencia de mensagens whatsapp', angulo: 'como montar cadencia de follow-up sem parecer spam' },
+  { kw: 'atendimento comercial whatsapp', angulo: 'padrao de atendimento comercial que converte no whatsapp' },
+  { kw: 'painel de atendimento whatsapp', angulo: 'o que um bom painel de atendimento no whatsapp deve mostrar' },
+  { kw: 'automatizar primeiro atendimento whatsapp', angulo: 'como o primeiro atendimento automatizado quebra o silencio inicial' },
+  { kw: 'agente de ia treinado para o negocio', angulo: 'diferenca entre chatbot generico e agente de ia com base de conhecimento' },
+  { kw: 'transferencia de atendimento whatsapp', angulo: 'como transferir atendimento entre humano e ia sem perder o contexto' },
+  { kw: 'historico de conversa whatsapp', angulo: 'por que preservar o historico completo muda a qualidade do atendimento' },
+  { kw: 'carteirizacao whatsapp', angulo: 'vincular contatos a responsaveis especificos e o impacto na relacao' },
+  { kw: 'supervisor de ia atendimento', angulo: 'o que um supervisor de ia faz e como ele orquestra outros agentes' },
 ];
 
 // ---------- Utilidades ----------
@@ -83,6 +119,11 @@ function hojeISO() {
   const d = new Date(Date.now() - 3 * 60 * 60 * 1000); // BRT
   return d.toISOString().slice(0, 10);
 }
+function diasEntre(iso1, iso2) {
+  const d1 = new Date(iso1);
+  const d2 = new Date(iso2);
+  return Math.abs((d2 - d1) / 86400000);
+}
 function dataExtenso(iso) {
   const meses = ['janeiro','fevereiro','marco','abril','maio','junho','julho','agosto','setembro','outubro','novembro','dezembro'];
   const [y, m, d] = iso.split('-').map(Number);
@@ -93,13 +134,43 @@ async function lerPosts() {
   if (!(await existe(POSTS_JSON))) return [];
   try { return JSON.parse(await readFile(POSTS_JSON, 'utf8')); } catch { return []; }
 }
+function contarPalavras(html) {
+  return html.replace(/<[^>]+>/g, ' ').replace(/\s+/g,' ').trim().split(' ').length;
+}
 
-// Escolhe a keyword menos usada recentemente (cicla a lista)
+// ---------- Anti-canibalizacao ----------
+// Filtra keywords ainda "seguras" (nao usadas nos ultimos MIN_DIAS_ENTRE_KEYWORD dias)
 function escolherKeyword(posts) {
-  const usadasRecentes = posts.slice(0, KEYWORDS.length - 1).map((p) => p.keyword);
-  const disponiveis = KEYWORDS.filter((k) => !usadasRecentes.includes(k.kw));
-  const pool = disponiveis.length ? disponiveis : KEYWORDS;
-  return pool[Math.floor(Math.random() * pool.length)];
+  const hoje = hojeISO();
+  const usadasRecentes = new Set(
+    posts
+      .filter((p) => diasEntre(p.data, hoje) < MIN_DIAS_ENTRE_KEYWORD)
+      .map((p) => p.keyword)
+  );
+  const disponiveis = KEYWORDS.filter((k) => !usadasRecentes.has(k.kw));
+  if (disponiveis.length === 0) return null; // TODAS foram usadas recentemente
+  return disponiveis[Math.floor(Math.random() * disponiveis.length)];
+}
+
+// ---------- Artigos relacionados (internal linking) ----------
+// Escolhe ate 3 posts existentes que compartilhem palavras com a keyword atual
+function escolherRelacionados(posts, keywordAlvo, slugAtual, max = 3) {
+  const palavrasAlvo = new Set(
+    keywordAlvo.toLowerCase().split(/\s+/).filter((w) => w.length > 3)
+  );
+  const scored = posts
+    .filter((p) => p.slug !== slugAtual)
+    .map((p) => {
+      const palavrasPost = new Set((p.keyword || '').toLowerCase().split(/\s+/));
+      let score = 0;
+      palavrasAlvo.forEach((w) => { if (palavrasPost.has(w)) score++; });
+      return { p, score };
+    })
+    .filter((x) => x.score > 0)
+    .sort((a, b) => b.score - a.score || new Date(b.p.data) - new Date(a.p.data))
+    .slice(0, max)
+    .map((x) => x.p);
+  return scored;
 }
 
 // ---------- Geracao via API ----------
@@ -160,7 +231,7 @@ O que a Manu.ia NAO e (posicionamento honesto, use como verdade central):
 IMPORTANTE: relacione o tema do artigo a UMA ou DUAS funcoes especificas acima
 quando fizer sentido (ex: supervisor de IA, CRM no WhatsApp, carteirizacao,
 follow-up automatico), de forma natural e sem parecer anuncio. Nao force todas e sempre em todo artigo frise o nome Manu, ex: Com a Manu você terá um fluxo completo de automação.
-Reforce a marca nos titulos e artigos, na primeira pessoa, não simplesmente como um CRM GENÉRICO. 
+Reforce a marca nos titulos e artigos, na primeira pessoa, não simplesmente como um CRM GENÉRICO. 
 
 == REGRAS INEGOCIAVEIS (honestidade) ==
 - NUNCA prometa resultado numerico ("aumente 300% das vendas", "dobre o
@@ -202,7 +273,7 @@ ${IMAGENS.map((i) => `- ${i.arq}: ${i.desc}`).join('\n')}
 == REGRAS DO corpoHtml ==
 - Use apenas: <h2>, <h3>, <p>, <ul>, <ol>, <li>, <strong>, <em>.
 - NAO use <a>, estilos inline, classes, <h1>, <html>, <head> ou <body>.
-- Entre 750 e 1000 palavras.
+- Entre 900 e 1200 palavras.
 - NAO escreva uma chamada final do tipo "fale conosco" nem CTA no texto: o site
   ja insere um bloco de CTA com o WhatsApp depois do corpo.
 - NAO inclua secao de "Fontes e referencias". Encerre com um paragrafo de
@@ -213,8 +284,7 @@ ${IMAGENS.map((i) => `- ${i.arq}: ${i.desc}`).join('\n')}
 ANGULO SUGERIDO: ${alvo.angulo}
 
 Escreva o artigo otimizado para essa palavra-chave, seguindo todas as regras.
-Evite repetir estes titulos ja publicados: ${titulosRecentes.join(' | ') || 'nenhum'}.
-Responda apenas o JSON.`;
+Evite repetir estes titulos ja publicados: ${titulosRecentes.join(' | ') || 'nenhum'}.`;
 
   const resp = await fetch('https://api.anthropic.com/v1/messages', {
     method: 'POST',
@@ -253,7 +323,6 @@ Responda apenas o JSON.`;
     corpoHtml: corte(raw, '===CORPO===', null),
   };
 
-  // valida a imagem: so aceita nome exato da lista; senao, sem imagem
   const imgLimpa = (artigo.imagem || '').replace(/\.png$/i, '').trim();
   artigo.imagem = IMAGENS_VALIDAS.includes(imgLimpa) ? imgLimpa : '';
 
@@ -263,24 +332,60 @@ Responda apenas o JSON.`;
   return artigo;
 }
 
-// ---------- Render do artigo ----------
-function renderArtigo(artigo, slug, dataISO) {
+// ---------- Render do artigo (com internal linking + schema enriquecido) ----------
+function renderArtigo(artigo, slug, dataISO, relacionados) {
   const url = `${SITE_URL}/blog/${slug}`;
   const heroImg = artigo.imagem ? `${SITE_URL}/${artigo.imagem}.png` : '';
   const ogImg = heroImg || OG_IMAGE;
   const titulo = escapeHtml(artigo.titulo);
-  const descricao = escapeHtml(artigo.descricao || '');
+  const descricao = escapeHtml(artigo.descricao);
   const keywords = escapeHtml((artigo.keywords || []).join(', '));
   const leitura = escapeHtml(artigo.leitura || '');
+  const wordCount = contarPalavras(artigo.corpoHtml);
 
-  const jsonLd = {
-    '@context': 'https://schema.org', '@type': 'Article',
-    headline: artigo.titulo, description: artigo.descricao || '', image: ogImg,
-    datePublished: dataISO, dateModified: dataISO,
-    author: { '@type': 'Organization', name: 'Manu.ia' },
-    publisher: { '@type': 'Organization', name: 'Manu.ia', logo: { '@type': 'ImageObject', url: LOGO } },
+  // Schema.org: Article + BreadcrumbList
+  const articleSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'Article',
+    headline: artigo.titulo,
+    description: artigo.descricao,
+    image: ogImg,
+    datePublished: dataISO,
+    dateModified: dataISO,
+    inLanguage: 'pt-BR',
+    wordCount: wordCount,
+    keywords: (artigo.keywords || []).join(', '),
+    articleSection: 'CRM e Atendimento WhatsApp',
+    author: { '@type': 'Organization', name: 'Manu.ia', url: SITE_URL },
+    publisher: {
+      '@type': 'Organization',
+      name: 'Manu.ia',
+      url: SITE_URL,
+      logo: { '@type': 'ImageObject', url: LOGO },
+    },
     mainEntityOfPage: { '@type': 'WebPage', '@id': url },
   };
+  const breadcrumbSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Home', item: `${SITE_URL}/` },
+      { '@type': 'ListItem', position: 2, name: 'Blog', item: `${SITE_URL}/blog/` },
+      { '@type': 'ListItem', position: 3, name: artigo.titulo, item: url },
+    ],
+  };
+
+  const relacionadosHtml = relacionados.length ? `
+    <aside class="related">
+      <h2>Continue lendo</h2>
+      <div class="related-grid">
+${relacionados.map((r) => `        <a class="related-card" href="/blog/${escapeHtml(r.slug)}">
+          <span class="related-eyebrow">Artigo</span>
+          <h3>${escapeHtml(r.titulo)}</h3>
+          <span class="related-arrow">Ler artigo →</span>
+        </a>`).join('\n')}
+      </div>
+    </aside>` : '';
 
   return `<!DOCTYPE html>
 <html lang="pt-BR">
@@ -291,14 +396,22 @@ function renderArtigo(artigo, slug, dataISO) {
 <title>${titulo} | Blog Manu.ia</title>
 <meta name="description" content="${descricao}">
 <meta name="keywords" content="${keywords}">
+<meta name="robots" content="index,follow,max-image-preview:large">
 <link rel="canonical" href="${url}">
 <meta property="og:type" content="article">
 <meta property="og:title" content="${titulo}">
 <meta property="og:description" content="${descricao}">
 <meta property="og:image" content="${ogImg}">
 <meta property="og:url" content="${url}">
+<meta property="og:site_name" content="Manu.ia">
+<meta property="og:locale" content="pt_BR">
+<meta property="article:published_time" content="${dataISO}">
 <meta name="twitter:card" content="summary_large_image">
-<script type="application/ld+json">${JSON.stringify(jsonLd)}</script>
+<meta name="twitter:title" content="${titulo}">
+<meta name="twitter:description" content="${descricao}">
+<meta name="twitter:image" content="${ogImg}">
+<script type="application/ld+json">${JSON.stringify(articleSchema)}</script>
+<script type="application/ld+json">${JSON.stringify(breadcrumbSchema)}</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -336,6 +449,14 @@ header.scrolled { background: rgba(13,8,24,0.85); backdrop-filter: blur(20px); b
 .article-cta p { color: rgba(255,255,255,0.6); margin-bottom: 24px; line-height: 1.55; }
 .btn-primary { background: linear-gradient(135deg, #D060FF 0%, #8A05BE 100%); color: #fff; padding: 14px 28px; border-radius: 10px; text-decoration: none; font-size: 15px; font-weight: 600; display: inline-flex; align-items: center; gap: 8px; transition: opacity 0.2s; box-shadow: 0 0 60px rgba(208,96,255,0.18); }
 .btn-primary:hover { opacity: 0.9; }
+.related { margin-top: 72px; padding-top: 40px; border-top: 1px solid rgba(255,255,255,0.08); }
+.related h2 { font-size: 1.3rem; font-weight: 700; color: #fff; margin-bottom: 24px; }
+.related-grid { display: grid; grid-template-columns: 1fr; gap: 14px; }
+.related-card { display: block; padding: 20px 22px; border-radius: 14px; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06); text-decoration: none; transition: border-color 0.3s, transform 0.3s; }
+.related-card:hover { border-color: rgba(208,96,255,0.35); transform: translateY(-2px); }
+.related-eyebrow { display: block; font-size: 10px; text-transform: uppercase; letter-spacing: 0.15em; font-weight: 600; color: var(--magenta); margin-bottom: 8px; }
+.related-card h3 { font-size: 1rem; font-weight: 600; line-height: 1.35; color: #fff; margin-bottom: 10px; }
+.related-arrow { font-size: 13px; color: rgba(255,255,255,0.55); }
 footer { padding: 40px 24px; border-top: 1px solid rgba(255,255,255,0.05); margin-top: 80px; }
 .footer-inner { max-width: 1100px; margin: 0 auto; display: flex; flex-direction: column; align-items: center; gap: 14px; text-align: center; }
 .footer-copy { font-size: 11px; color: rgba(255,255,255,0.4); }
@@ -376,6 +497,7 @@ ${artigo.corpoHtml}
         Falar com a Manu agora
       </a>
     </div>
+${relacionadosHtml}
   </article>
 </main>
 <footer>
@@ -409,19 +531,43 @@ function renderIndice(posts) {
         </span>
       </a>`).join('\n');
 
+  const blogSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'Blog',
+    name: 'Blog Manu.ia',
+    description: 'Conteudos sobre CRM com IA, atendimento automatizado e qualificacao de leads no WhatsApp.',
+    url: `${SITE_URL}/blog/`,
+    inLanguage: 'pt-BR',
+    publisher: {
+      '@type': 'Organization',
+      name: 'Manu.ia',
+      url: SITE_URL,
+      logo: { '@type': 'ImageObject', url: LOGO },
+    },
+  };
+
   return `<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="icon" type="image/png" href="${FAVICON}">
-<title>Blog | Manu.ia</title>
-<meta name="description" content="Conteudos sobre CRM com IA, atendimento automatizado e qualificacao de leads no WhatsApp.">
+<title>Blog Manu.ia | CRM com IA, atendimento e vendas no WhatsApp</title>
+<meta name="description" content="Conteudos praticos sobre CRM com IA, atendimento automatizado no WhatsApp, qualificacao de leads e como nao perder oportunidades comerciais.">
+<meta name="robots" content="index,follow,max-image-preview:large">
 <link rel="canonical" href="${SITE_URL}/blog/">
-<meta property="og:title" content="Blog | Manu.ia">
-<meta property="og:description" content="Conteudos sobre CRM com IA, atendimento automatizado e qualificacao de leads no WhatsApp.">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Blog Manu.ia | CRM com IA e vendas no WhatsApp">
+<meta property="og:description" content="Conteudos praticos sobre CRM com IA, atendimento automatizado no WhatsApp e qualificacao de leads.">
 <meta property="og:image" content="${OG_IMAGE}">
 <meta property="og:url" content="${SITE_URL}/blog/">
+<meta property="og:site_name" content="Manu.ia">
+<meta property="og:locale" content="pt_BR">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Blog Manu.ia | CRM com IA e vendas no WhatsApp">
+<meta name="twitter:description" content="Conteudos praticos sobre CRM com IA, atendimento automatizado no WhatsApp e qualificacao de leads.">
+<meta name="twitter:image" content="${OG_IMAGE}">
+<script type="application/ld+json">${JSON.stringify(blogSchema)}</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -502,7 +648,7 @@ function renderSitemap(posts) {
   <url>
     <loc>${SITE_URL}/blog/</loc>
     <lastmod>${hojeISO()}</lastmod>
-    <changefreq>daily</changefreq>
+    <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>`;
   const artigos = posts.map((p) =>
@@ -510,7 +656,7 @@ function renderSitemap(posts) {
     <loc>${SITE_URL}/blog/${p.slug}</loc>
     <lastmod>${p.data}</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
+    <priority>0.7</priority>
   </url>`).join('\n');
   return `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
@@ -527,6 +673,14 @@ async function main() {
   const dataISO = hojeISO();
 
   const alvo = escolherKeyword(posts);
+
+  // === ANTI-CANIBALIZACAO: se todas keywords foram usadas recentemente, PARA ===
+  if (!alvo) {
+    console.log(`[skip] Todas as ${KEYWORDS.length} keywords foram usadas nos ultimos ${MIN_DIAS_ENTRE_KEYWORD} dias.`);
+    console.log('[skip] Adicione novas keywords a KEYWORDS[] ou reduza MIN_DIAS_ENTRE_KEYWORD.');
+    process.exit(0);
+  }
+
   let artigo, keywordUsada;
   if (ARTIGO_LOCAL) {
     console.log(`[seed] usando artigo local: ${ARTIGO_LOCAL}`);
@@ -538,12 +692,23 @@ async function main() {
     keywordUsada = alvo.kw;
   }
 
-  let slug = slugify(artigo.titulo);
+  const slug = slugify(artigo.titulo);
+
+  // === BUG FIX: se o slug ja existe, PULA em vez de criar duplicata ===
   if (await existe(path.join(BLOG_DIR, `${slug}.html`))) {
-    slug = `${slug}-${Date.now().toString(36).slice(-4)}`;
+    console.log(`[skip] slug "${slug}" ja existe no disco. Nao criando duplicata.`);
+    console.log('[skip] Isso e proposital: evita canibalizacao SEO.');
+    console.log('[skip] Rode o script novamente para gerar outro artigo com titulo diferente.');
+    process.exit(0);
   }
 
-  await writeFile(path.join(BLOG_DIR, `${slug}.html`), renderArtigo(artigo, slug, dataISO), 'utf8');
+  // Escolhe artigos relacionados dos posts existentes (internal linking)
+  const relacionados = escolherRelacionados(posts, keywordUsada, slug, 3);
+  if (relacionados.length) {
+    console.log(`[internal] ${relacionados.length} artigos relacionados linkados: ${relacionados.map(r => r.slug).join(', ')}`);
+  }
+
+  await writeFile(path.join(BLOG_DIR, `${slug}.html`), renderArtigo(artigo, slug, dataISO, relacionados), 'utf8');
   console.log(`[ok] artigo criado: blog/${slug}.html`);
 
   posts.unshift({
@@ -555,10 +720,9 @@ async function main() {
   await writeFile(SITEMAP, renderSitemap(posts), 'utf8');
   console.log(`[ok] indice e sitemap atualizados. Total: ${posts.length}`);
 
-  // Exporta o slug e o titulo para o workflow montar o link de preview
   if (process.env.GITHUB_OUTPUT) {
     await writeFile(process.env.GITHUB_OUTPUT, `slug=${slug}\ntitulo=${artigo.titulo}\n`, { flag: 'a' });
   }
 }
 
-main().catch((err) => { console.error('[falha]', err.message); process.exit(1); });
+main().catch((e) => { console.error(e); process.exit(1); });
