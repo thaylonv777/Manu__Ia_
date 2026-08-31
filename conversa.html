@@ -1,11 +1,12 @@
+
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Converse com a Manu | Demonstração ao vivo — Manu.ia</title>
-<meta name="description" content="Converse ao vivo com a Manu, o agente de IA da Manu.ia, e veja como ela qualifica um lead de verdade — na prática, agora.">
+<title>Fale com a Manu | SDR Imobiliário 24h — Manu.ia</title>
+<meta name="description" content="Converse ao vivo com a Manu, a SDR de IA que qualifica leads imobiliários 24 horas por dia. Teste agora o mesmo agente usado em operações reais.">
 <meta name="robots" content="index,follow">
 <link rel="canonical" href="https://www.manuai.com.br/conversa">
 
@@ -16,8 +17,8 @@
 <meta property="og:site_name" content="Manu.ia">
 <meta property="og:locale" content="pt_BR">
 <meta property="og:url" content="https://www.manuai.com.br/conversa">
-<meta property="og:title" content="Converse com a Manu | Demonstração ao vivo">
-<meta property="og:description" content="Veja como a Manu qualifica um lead de verdade — converse com ela agora mesmo.">
+<meta property="og:title" content="Fale com a Manu | SDR Imobiliário 24h">
+<meta property="og:description" content="47% dos leads imobiliários nunca recebem resposta. Veja como a Manu qualifica um lead em tempo real.">
 <meta property="og:image" content="https://www.manuai.com.br/og-image.png">
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -128,6 +129,27 @@ h1 span { color: var(--magenta-deep); }
   color: var(--ink-soft);
   max-width: 46ch;
   margin-bottom: 32px;
+}
+
+.stat-callout {
+  margin-top: 28px;
+  padding: 18px 20px;
+  border-radius: 14px;
+  background: var(--paper-tint);
+  border: 1px solid var(--line);
+  max-width: 46ch;
+}
+.stat-callout p {
+  font-size: 14px;
+  line-height: 1.55;
+  color: var(--ink);
+}
+.stat-callout p strong { color: var(--magenta-deep); }
+.stat-callout span {
+  display: block;
+  margin-top: 8px;
+  font-size: 11.5px;
+  color: var(--ink-faint);
 }
 
 .facts { display: flex; flex-direction: column; gap: 16px; }
@@ -302,12 +324,88 @@ h1 span { color: var(--magenta-deep); }
 .panel-input button:hover { opacity: 0.9; }
 .panel-input button:disabled { opacity: 0.4; cursor: default; }
 
+.action-chip {
+  align-self: center;
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 6px 12px;
+  border-radius: 999px;
+  background: rgba(138,5,190,0.06);
+  border: 1px solid rgba(138,5,190,0.16);
+  color: var(--magenta-deep);
+  font-size: 11.5px;
+  font-weight: 600;
+  animation: rise 0.28s ease both;
+}
+.action-chip .action-dot {
+  width: 5px; height: 5px; border-radius: 50%;
+  background: var(--magenta);
+  flex: none;
+}
+
 .panel-note {
   text-align: center;
   font-size: 12px;
   color: var(--ink-faint);
   margin-top: 16px;
 }
+
+/* ---------- plataforma completa ---------- */
+.platform {
+  border-top: 1px solid var(--line);
+  padding: 88px 24px;
+}
+.platform-inner { max-width: 1180px; margin: 0 auto; }
+.platform-head { max-width: 640px; margin-bottom: 48px; }
+.platform-head .eyebrow { margin-bottom: 16px; }
+.platform-head h2 {
+  font-size: clamp(1.7rem, 3.4vw, 2.4rem);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  line-height: 1.15;
+  margin-bottom: 14px;
+}
+.platform-head p { color: var(--ink-soft); font-size: 15.5px; line-height: 1.6; }
+
+.platform-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1px;
+  background: var(--line);
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  overflow: hidden;
+}
+@media (min-width: 720px) {
+  .platform-grid { grid-template-columns: repeat(2, 1fr); }
+}
+@media (min-width: 1100px) {
+  .platform-grid { grid-template-columns: repeat(3, 1fr); }
+}
+.platform-card {
+  background: var(--paper);
+  padding: 28px 26px;
+}
+.platform-card.highlight { background: var(--paper-tint); }
+.platform-card h3 { font-size: 15.5px; font-weight: 700; margin-bottom: 8px; }
+.platform-card p { font-size: 13.5px; line-height: 1.55; color: var(--ink-soft); }
+.platform-card .tag {
+  display: inline-block;
+  font-size: 11px; font-weight: 700;
+  color: var(--magenta-deep);
+  margin-bottom: 10px;
+}
+
+.platform-stat {
+  margin-top: 32px;
+  padding: 20px 24px;
+  border-radius: 14px;
+  background: var(--paper-tint);
+  border: 1px solid var(--line);
+  font-size: 14px;
+  color: var(--ink-soft);
+  line-height: 1.6;
+}
+.platform-stat strong { color: var(--ink); }
 
 /* ---------- footer CTA ---------- */
 .footer-cta {
@@ -361,9 +459,14 @@ h1 span { color: var(--magenta-deep); }
 
 <main class="wrap">
   <div>
-    <div class="eyebrow"><span class="eyebrow-dot"></span> Demonstração ao vivo</div>
-    <h1>Antes de contratar,<br><span>fale com ela.</span></h1>
-    <p class="lede">Este é o mesmo agente que qualifica leads reais pro Portal do Primeiro Imóvel — cidade, renda, perfil, tudo. Diga "oi" e veja como a Manu conduz a conversa até o fim.</p>
+    <div class="eyebrow"><span class="eyebrow-dot"></span> Demonstração ao vivo — SDR Imobiliário</div>
+    <h1>Fale com a Manu.<br>Sua <span>SDR imobiliária</span>, 24h por dia.</h1>
+    <p class="lede">Este é o mesmo agente que qualifica leads reais pro Portal do Primeiro Imóvel — cidade, renda, perfil, tudo. Diga "oi" e veja como a Manu conduz a conversa até o fim, na hora, sem esperar ninguém ficar livre.</p>
+
+    <div class="stat-callout">
+      <p><strong>47% dos leads imobiliários nunca recebem resposta.</strong> Quem responde em até 5 minutos converte até 100x mais do que quem demora 30.</p>
+      <span>Fontes: Harvard Business Review / Inside Sales · Morada.ai, 2026</span>
+    </div>
 
     <div class="facts">
       <div class="fact">
@@ -376,7 +479,7 @@ h1 span { color: var(--magenta-deep); }
       </div>
       <div class="fact">
         <div class="fact-num">3</div>
-        <div class="fact-text"><strong>No fim</strong>, ela até envia o material — do jeito que enviaria pra um lead de verdade.</div>
+        <div class="fact-text"><strong>Ela responde agora</strong>, de madrugada, no feriado, no domingo — sem fila de espera.</div>
       </div>
     </div>
 
@@ -406,10 +509,55 @@ h1 span { color: var(--magenta-deep); }
   </div>
 </main>
 
+<section class="platform">
+  <div class="platform-inner">
+    <div class="platform-head">
+      <div class="eyebrow"><span class="eyebrow-dot"></span> Por trás dessa conversa</div>
+      <h2>A Manu que você acabou de testar não trabalha sozinha.</h2>
+      <p>Enquanto ela conversava com você, ela já estava alimentando o CRM, aplicando etiquetas e organizando tudo no funil — sem ninguém digitando nada. É a mesma plataforma completa que atende seus clientes de verdade.</p>
+    </div>
+    <div class="platform-grid">
+      <div class="platform-card highlight">
+        <span class="tag">Agentes Inteligentes</span>
+        <h3>O que você acabou de ver</h3>
+        <p>Assistentes de IA que entendem, qualificam e resolvem direto na conversa — enquanto sua equipe foca só no que realmente precisa de um humano.</p>
+      </div>
+      <div class="platform-card">
+        <span class="tag">Central de Atendimento</span>
+        <h3>WhatsApp, Instagram e Messenger num só painel</h3>
+        <p>Etiquetas organizam cada conversa automaticamente, e a transferência pro time humano acontece sem perder o histórico.</p>
+      </div>
+      <div class="platform-card">
+        <span class="tag">CRM</span>
+        <h3>Cada lead vira card sozinho</h3>
+        <p>Segmentação por perfil, histórico e comportamento — a jornada do cliente mapeada desde o primeiro "oi".</p>
+      </div>
+      <div class="platform-card">
+        <span class="tag">Chatbot</span>
+        <h3>Fluxos pra tudo que se repete</h3>
+        <p>Agendamento, dúvidas frequentes e suporte rodando lado a lado com o agente de IA, sem retrabalho.</p>
+      </div>
+      <div class="platform-card">
+        <span class="tag">Disparo de Mensagens</span>
+        <h3>Ninguém esfria sem alguém notar</h3>
+        <p>Campanhas de reengajamento automáticas — carrinho abandonado, lead parado, promoção pontual.</p>
+      </div>
+      <div class="platform-card">
+        <span class="tag">Rastreabilidade</span>
+        <h3>Você sabe de onde veio cada lead</h3>
+        <p>Anúncio, site ou indicação — a origem chega marcada, com atribuição detalhada de principio ao fim.</p>
+      </div>
+    </div>
+    <div class="platform-stat">
+      <strong>82% das pessoas já falam com marcas pelo WhatsApp</strong>, e 97% abrem o app todo dia. A pergunta não é se seu negócio deveria estar lá — é se alguém está respondendo direito.
+    </div>
+  </div>
+</section>
+
 <section class="footer-cta">
   <div class="footer-cta-inner">
     <h2>É isso que a Manu faz pelo seu negócio, 24 horas por dia.</h2>
-    <p>Imóveis, clínicas, agências — a lógica é a mesma: qualificar de verdade, sem perder o tom humano. Se fizer sentido pro seu segmento, bora conversar.</p>
+    <p>Imobiliária, clínica, agência — a lógica muda conforme o seu nicho, mas o resultado é o mesmo: qualificação de verdade, sem perder o tom humano, sem perder lead por demora.</p>
     <a class="btn-primary" href="https://wa.me/5551993933653" target="_blank" rel="noopener">Quero isso no meu negócio</a>
   </div>
 </section>
@@ -434,6 +582,14 @@ h1 span { color: var(--magenta-deep); }
     messagesEl.appendChild(div);
     scrollDown();
     return div;
+  }
+
+  function addActionChip(text) {
+    const div = document.createElement('div');
+    div.className = 'action-chip';
+    div.innerHTML = '<span class="action-dot"></span>' + text;
+    messagesEl.appendChild(div);
+    scrollDown();
   }
 
   function addAttachment(att) {
@@ -477,6 +633,9 @@ h1 span { color: var(--magenta-deep); }
       });
       const data = await res.json();
       removeTyping();
+      if (Array.isArray(data.actions)) {
+        data.actions.forEach(function (text) { addActionChip(text); });
+      }
       if (data.reply) {
         addBubble('bot', data.reply);
         history.push({ role: 'assistant', content: data.reply });
