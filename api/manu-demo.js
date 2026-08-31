@@ -1,12 +1,10 @@
 // /api/manu-demo.js
 // Serverless function (Vercel, Node.js) — roda a Manu (demo) para a página /conversa.
 // Não usa WhatsApp nem a Helena: é um clone funcional do agente real,
-// chamando a API da Anthropic diretamente com o mesmo prompt de regras.
+// chamando a API da OpenAI (GPT) diretamente com o mesmo prompt de regras.
 //
-// Requer a variável de ambiente ANTHROPIC_API_KEY configurada no projeto Vercel
-// (Project Settings > Environment Variables). É uma chave separada da usada
-// no GitHub Action do blog — pode ser a mesma chave, mas precisa ser cadastrada
-// aqui também, pois o GitHub Secret não é visto pela Vercel.
+// Requer a variável de ambiente OPENAI_API_KEY configurada no projeto Vercel
+// (Project Settings > Environments > Production > Environment Variables).
 
 const SYSTEM_PROMPT = `Você é a Manu, assistente de atendimento (SDR) do Portal do Primeiro Imóvel — Canoas e região metropolitana de Porto Alegre.
 
@@ -86,7 +84,7 @@ module.exports = async (req, res) => {
     return;
   }
 
-  if (!process.env.ANTHROPIC_API_KEY) {
+  if (!process.env.OPENAI_API_KEY) {
     res.status(500).json({ error: 'missing_api_key' });
     return;
   }
@@ -101,7 +99,7 @@ module.exports = async (req, res) => {
   }
   const history = Array.isArray(body && body.messages) ? body.messages : [];
 
-  const anthropicMessages = history.length
+  const chatMessages = history.length
     ? history.map((m) => ({ role: m.role, content: m.content }))
     : [
         {
@@ -112,34 +110,28 @@ module.exports = async (req, res) => {
       ];
 
   try {
-    const upstream = await fetch('https://api.anthropic.com/v1/messages', {
+    const upstream = await fetch('https://api.openai.com/v1/chat/completions', {
       method: 'POST',
       headers: {
         'content-type': 'application/json',
-        'x-api-key': process.env.ANTHROPIC_API_KEY,
-        'anthropic-version': '2023-06-01',
+        authorization: `Bearer ${process.env.OPENAI_API_KEY}`,
       },
       body: JSON.stringify({
-        model: 'claude-sonnet-4-6',
+        model: 'gpt-4o-mini',
         max_tokens: 400,
-        system: SYSTEM_PROMPT,
-        messages: anthropicMessages,
+        messages: [{ role: 'system', content: SYSTEM_PROMPT }, ...chatMessages],
       }),
     });
 
     if (!upstream.ok) {
       const errText = await upstream.text();
-      console.error('Anthropic error', upstream.status, errText);
+      console.error('OpenAI error', upstream.status, errText);
       res.status(502).json({ error: 'upstream_error' });
       return;
     }
 
     const data = await upstream.json();
-    const rawText = (data.content || [])
-      .filter((b) => b.type === 'text')
-      .map((b) => b.text)
-      .join('\n')
-      .trim();
+    const rawText = (data.choices && data.choices[0] && data.choices[0].message && data.choices[0].message.content || '').trim();
 
     let attachment = null;
     let cleanText = rawText;
