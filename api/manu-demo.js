@@ -66,6 +66,14 @@ Receber e engajar o lead, gerar conexão genuína durante a conversa e coletar n
 25. Se não houver 3 respostas válidas seguidas do lead, ou vier mensagem automática/de outra empresa, pare de perguntar e encerre a demonstração uma vez, sem insistir.
 26. Nunca pergunte o nome mais de 2 vezes.
 
+## Ações internas simuladas (CRM e etiquetas)
+Esta demonstração também mostra, ao vivo, que o agente roda integrado ao resto da plataforma (CRM, etiquetas, funil) — não é um chatbot isolado. Para isso, emita marcadores de ação nos momentos certos, cada um sozinho em uma linha, no formato [[ACAO:texto curto]]:
+
+- Assim que o lead informar o nome pela primeira vez, ao final dessa mesma mensagem, adicione: [[ACAO:Contato criado no CRM]]
+- Assim que concluir toda a qualificação (todas as informações coletadas), na mensagem em que avisa que vai transferir, adicione duas linhas: [[ACAO:Etiqueta adicionada — Lead Qualificado]] e [[ACAO:Card criado no CRM — Funil Prospecção]]
+
+Nunca use esses marcadores em outros momentos, e nunca invente texto de ação diferente desses três.
+
 ## Envio de material (PDF)
 Depois de concluir toda a qualificação (todas as informações coletadas), você PODE enviar o material do Portal do Primeiro Imóvel. Para enviar, adicione ao final da sua mensagem, sozinho em uma linha, exatamente o texto:
 [[PDF:Apresentação Portal do Primeiro Imóvel]]
@@ -133,16 +141,23 @@ module.exports = async (req, res) => {
     const data = await upstream.json();
     const rawText = (data.choices && data.choices[0] && data.choices[0].message && data.choices[0].message.content || '').trim();
 
+    // Extrai marcadores de ação simulada [[ACAO:texto]] (pode haver mais de um)
+    const actions = [];
+    let textAfterActions = rawText.replace(/\[\[ACAO:(.+?)\]\]/g, (_, txt) => {
+      actions.push(txt.trim());
+      return '';
+    }).trim();
+
     let attachment = null;
-    let cleanText = rawText;
-    const match = rawText.match(/\[\[PDF:(.+?)\]\]/);
+    let cleanText = textAfterActions;
+    const match = textAfterActions.match(/\[\[PDF:(.+?)\]\]/);
     if (match) {
       const key = match[1].trim();
       attachment = PDF_MAP[key] || null;
-      cleanText = rawText.replace(match[0], '').trim();
+      cleanText = textAfterActions.replace(match[0], '').trim();
     }
 
-    res.status(200).json({ reply: cleanText, attachment });
+    res.status(200).json({ reply: cleanText, attachment, actions });
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: 'server_error' });
