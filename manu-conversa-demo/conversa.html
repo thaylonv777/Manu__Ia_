@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Converse com a Manu | Demonstração ao vivo — Manu.ia</title>
+<meta name="description" content="Converse ao vivo com a Manu, o agente de IA da Manu.ia, e veja como ela qualifica um lead de verdade — na prática, agora.">
+<meta name="robots" content="index,follow">
+<link rel="canonical" href="https://www.manuai.com.br/conversa">
+
+<link rel="icon" type="image/png" href="/icon_navegador.png">
+<link rel="apple-touch-icon" href="/icon_principal.png">
+
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Manu.ia">
+<meta property="og:locale" content="pt_BR">
+<meta property="og:url" content="https://www.manuai.com.br/conversa">
+<meta property="og:title" content="Converse com a Manu | Demonstração ao vivo">
+<meta property="og:description" content="Veja como a Manu qualifica um lead de verdade — converse com ela agora mesmo.">
+<meta property="og:image" content="https://www.manuai.com.br/og-image.png">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" onload="this.rel='stylesheet'">
+<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"></noscript>
+
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+
+:root {
+  --paper: #FFFFFF;
+  --paper-tint: #FAF9FC;
+  --ink: #0D0818;
+  --ink-soft: rgba(13,8,24,0.60);
+  --ink-faint: rgba(13,8,24,0.38);
+  --line: rgba(13,8,24,0.08);
+  --magenta: #D060FF;
+  --magenta-deep: #8A05BE;
+  --shadow-tint: rgba(138,5,190,0.16);
+}
+
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  background: var(--paper);
+  color: var(--ink);
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+/* ---------- backdrop depth ---------- */
+.backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  background:
+    radial-gradient(680px 480px at 88% 8%, rgba(208,96,255,0.10), transparent 60%),
+    radial-gradient(520px 420px at 6% 92%, rgba(138,5,190,0.06), transparent 60%),
+    var(--paper);
+}
+
+/* ---------- header ---------- */
+header {
+  padding: 28px 24px;
+}
+.header-inner {
+  max-width: 1180px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.logo img { height: 26px; display: block; }
+.back-link {
+  color: var(--ink-soft);
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 500;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: color 0.2s;
+}
+.back-link:hover { color: var(--ink); }
+
+/* ---------- hero / layout ---------- */
+.wrap {
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 40px 24px 100px;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 56px;
+  align-items: center;
+}
+@media (min-width: 960px) {
+  .wrap { grid-template-columns: 0.95fr 1.05fr; gap: 64px; padding-top: 56px; }
+}
+
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--magenta-deep);
+  font-size: 13px;
+  font-weight: 600;
+  margin-bottom: 20px;
+}
+.eyebrow-dot {
+  width: 7px; height: 7px; border-radius: 50%;
+  background: var(--magenta);
+  box-shadow: 0 0 0 4px rgba(208,96,255,0.16);
+}
+
+h1 {
+  font-size: clamp(2.1rem, 4.2vw, 3.3rem);
+  font-weight: 800;
+  line-height: 1.08;
+  letter-spacing: -0.025em;
+  margin-bottom: 22px;
+}
+h1 span { color: var(--magenta-deep); }
+
+.lede {
+  font-size: 17px;
+  line-height: 1.65;
+  color: var(--ink-soft);
+  max-width: 46ch;
+  margin-bottom: 32px;
+}
+
+.facts { display: flex; flex-direction: column; gap: 16px; }
+.fact { display: flex; gap: 14px; align-items: flex-start; }
+.fact-num {
+  flex: none;
+  width: 26px; height: 26px;
+  border-radius: 8px;
+  background: var(--paper-tint);
+  border: 1px solid var(--line);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 12px; font-weight: 700; color: var(--magenta-deep);
+}
+.fact-text { font-size: 14.5px; color: var(--ink-soft); line-height: 1.5; padding-top: 2px; }
+.fact-text strong { color: var(--ink); font-weight: 600; }
+
+.cta-row { margin-top: 36px; display: flex; flex-wrap: wrap; gap: 14px; }
+.btn-ghost {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 13px 22px;
+  border-radius: 10px;
+  border: 1px solid var(--line);
+  color: var(--ink);
+  text-decoration: none;
+  font-size: 14.5px; font-weight: 600;
+  transition: border-color 0.2s, background 0.2s;
+}
+.btn-ghost:hover { border-color: rgba(138,5,190,0.35); background: var(--paper-tint); }
+
+/* ---------- chat panel (signature element) ---------- */
+.panel-stage {
+  position: relative;
+  display: flex;
+  justify-content: center;
+}
+.panel-ghost {
+  position: absolute;
+  inset: 18px 8px -18px 28px;
+  background: var(--paper-tint);
+  border: 1px solid var(--line);
+  border-radius: 22px;
+  transform: rotate(-2.2deg);
+  z-index: 0;
+}
+.panel {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 420px;
+  background: var(--paper);
+  border-radius: 20px;
+  border: 1px solid var(--line);
+  box-shadow: 0 40px 80px -32px var(--shadow-tint), 0 12px 28px -14px rgba(13,8,24,0.10);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  height: 620px;
+}
+
+.panel-head {
+  display: flex; align-items: center; gap: 12px;
+  padding: 18px 20px;
+  border-bottom: 1px solid var(--line);
+  flex: none;
+}
+.avatar {
+  width: 38px; height: 38px; border-radius: 11px;
+  background: linear-gradient(135deg, var(--magenta) 0%, var(--magenta-deep) 100%);
+  color: #fff; font-weight: 700; font-size: 15px;
+  display: flex; align-items: center; justify-content: center;
+  flex: none;
+}
+.panel-head-text { line-height: 1.3; }
+.panel-head-name { font-weight: 700; font-size: 15px; }
+.panel-head-status { font-size: 12.5px; color: var(--ink-faint); display: flex; align-items: center; gap: 6px; }
+.panel-head-status .dot { width: 6px; height: 6px; border-radius: 50%; background: #22c55e; }
+
+.messages {
+  flex: 1;
+  overflow-y: auto;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  scroll-behavior: smooth;
+}
+.msg {
+  max-width: 82%;
+  padding: 11px 14px;
+  border-radius: 14px;
+  font-size: 14.5px;
+  line-height: 1.5;
+  animation: rise 0.28s ease both;
+}
+@keyframes rise { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+.msg.bot {
+  align-self: flex-start;
+  background: var(--paper-tint);
+  border: 1px solid var(--line);
+  border-bottom-left-radius: 4px;
+  color: var(--ink);
+}
+.msg.user {
+  align-self: flex-end;
+  background: linear-gradient(135deg, var(--magenta) 0%, var(--magenta-deep) 100%);
+  color: #fff;
+  border-bottom-right-radius: 4px;
+}
+.msg.typing { display: flex; gap: 4px; padding: 14px; }
+.msg.typing span {
+  width: 6px; height: 6px; border-radius: 50%;
+  background: var(--ink-faint);
+  animation: blink 1.2s infinite ease-in-out;
+}
+.msg.typing span:nth-child(2) { animation-delay: 0.15s; }
+.msg.typing span:nth-child(3) { animation-delay: 0.3s; }
+@keyframes blink { 0%, 80%, 100% { opacity: 0.25; } 40% { opacity: 1; } }
+
+.attachment {
+  align-self: flex-start;
+  display: flex; align-items: center; gap: 10px;
+  max-width: 82%;
+  padding: 12px 14px;
+  border-radius: 14px;
+  border: 1px solid var(--line);
+  background: var(--paper);
+  text-decoration: none;
+  color: var(--ink);
+  animation: rise 0.28s ease both;
+}
+.attachment-icon {
+  flex: none; width: 34px; height: 34px; border-radius: 9px;
+  background: var(--paper-tint);
+  border: 1px solid var(--line);
+  display: flex; align-items: center; justify-content: center;
+}
+.attachment-text { font-size: 13px; line-height: 1.35; }
+.attachment-text strong { display: block; font-size: 13.5px; font-weight: 600; }
+.attachment-text span { color: var(--ink-faint); font-size: 12px; }
+
+.panel-input {
+  flex: none;
+  display: flex; align-items: center; gap: 10px;
+  padding: 14px 16px;
+  border-top: 1px solid var(--line);
+  background: var(--paper);
+}
+.panel-input input {
+  flex: 1;
+  border: 1px solid var(--line);
+  background: var(--paper-tint);
+  border-radius: 10px;
+  padding: 12px 14px;
+  font-size: 14.5px;
+  font-family: inherit;
+  color: var(--ink);
+  outline: none;
+  transition: border-color 0.2s;
+}
+.panel-input input:focus { border-color: rgba(138,5,190,0.4); }
+.panel-input button {
+  flex: none;
+  width: 42px; height: 42px;
+  border-radius: 10px;
+  border: none;
+  background: linear-gradient(135deg, var(--magenta) 0%, var(--magenta-deep) 100%);
+  color: #fff;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+.panel-input button:hover { opacity: 0.9; }
+.panel-input button:disabled { opacity: 0.4; cursor: default; }
+
+.panel-note {
+  text-align: center;
+  font-size: 12px;
+  color: var(--ink-faint);
+  margin-top: 16px;
+}
+
+/* ---------- footer CTA ---------- */
+.footer-cta {
+  border-top: 1px solid var(--line);
+  padding: 72px 24px;
+}
+.footer-cta-inner {
+  max-width: 720px;
+  margin: 0 auto;
+  text-align: center;
+}
+.footer-cta h2 {
+  font-size: clamp(1.5rem, 3vw, 2rem);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  margin-bottom: 14px;
+}
+.footer-cta p {
+  color: var(--ink-soft);
+  font-size: 15.5px;
+  line-height: 1.6;
+  margin-bottom: 28px;
+}
+.btn-primary {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 14px 28px;
+  border-radius: 10px;
+  background: linear-gradient(135deg, var(--magenta) 0%, var(--magenta-deep) 100%);
+  color: #fff;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 15px;
+}
+
+@media (max-width: 959px) {
+  .panel { height: 560px; }
+  .panel-ghost { display: none; }
+}
+</style>
+</head>
+<body>
+
+<div class="backdrop"></div>
+
+<header>
+  <div class="header-inner">
+    <a class="logo" href="/"><img src="/logo_manu_escura_transparente-removebg-preview.png" alt="Manu.ia"></a>
+    <a class="back-link" href="/">← Voltar ao site</a>
+  </div>
+</header>
+
+<main class="wrap">
+  <div>
+    <div class="eyebrow"><span class="eyebrow-dot"></span> Demonstração ao vivo</div>
+    <h1>Antes de contratar,<br><span>fale com ela.</span></h1>
+    <p class="lede">Este é o mesmo agente que qualifica leads reais pro Portal do Primeiro Imóvel — cidade, renda, perfil, tudo. Diga "oi" e veja como a Manu conduz a conversa até o fim.</p>
+
+    <div class="facts">
+      <div class="fact">
+        <div class="fact-num">1</div>
+        <div class="fact-text"><strong>Você conversa</strong> normalmente, como faria no WhatsApp.</div>
+      </div>
+      <div class="fact">
+        <div class="fact-num">2</div>
+        <div class="fact-text"><strong>A Manu qualifica</strong> sem parecer um formulário — uma pergunta de cada vez.</div>
+      </div>
+      <div class="fact">
+        <div class="fact-num">3</div>
+        <div class="fact-text"><strong>No fim</strong>, ela até envia o material — do jeito que enviaria pra um lead de verdade.</div>
+      </div>
+    </div>
+
+    <div class="cta-row">
+      <a class="btn-ghost" href="https://wa.me/5551993933653" target="_blank" rel="noopener">Prefiro falar com o Thaylon agora</a>
+    </div>
+  </div>
+
+  <div class="panel-stage">
+    <div class="panel-ghost"></div>
+    <div class="panel">
+      <div class="panel-head">
+        <div class="avatar">M</div>
+        <div class="panel-head-text">
+          <div class="panel-head-name">Manu</div>
+          <div class="panel-head-status"><span class="dot"></span> Demonstração ao vivo</div>
+        </div>
+      </div>
+      <div class="messages" id="messages"></div>
+      <div class="panel-input">
+        <input id="input" type="text" placeholder="Escreva uma mensagem..." autocomplete="off">
+        <button id="send" aria-label="Enviar">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M4 12L20 4L14 20L11 13L4 12Z" stroke="white" stroke-width="1.8" stroke-linejoin="round"/></svg>
+        </button>
+      </div>
+    </div>
+  </div>
+</main>
+
+<section class="footer-cta">
+  <div class="footer-cta-inner">
+    <h2>É isso que a Manu faz pelo seu negócio, 24 horas por dia.</h2>
+    <p>Imóveis, clínicas, agências — a lógica é a mesma: qualificar de verdade, sem perder o tom humano. Se fizer sentido pro seu segmento, bora conversar.</p>
+    <a class="btn-primary" href="https://wa.me/5551993933653" target="_blank" rel="noopener">Quero isso no meu negócio</a>
+  </div>
+</section>
+
+<script>
+(function () {
+  const messagesEl = document.getElementById('messages');
+  const inputEl = document.getElementById('input');
+  const sendEl = document.getElementById('send');
+
+  let history = [];
+  let busy = false;
+
+  function scrollDown() {
+    messagesEl.scrollTop = messagesEl.scrollHeight;
+  }
+
+  function addBubble(role, text) {
+    const div = document.createElement('div');
+    div.className = 'msg ' + (role === 'user' ? 'user' : 'bot');
+    div.textContent = text;
+    messagesEl.appendChild(div);
+    scrollDown();
+    return div;
+  }
+
+  function addAttachment(att) {
+    const a = document.createElement('a');
+    a.className = 'attachment';
+    a.href = att.url;
+    a.target = '_blank';
+    a.rel = 'noopener';
+    a.innerHTML =
+      '<div class="attachment-icon">' +
+      '<svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M7 3h7l5 5v13a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1Z" stroke="#8A05BE" stroke-width="1.6" stroke-linejoin="round"/><path d="M14 3v5h5" stroke="#8A05BE" stroke-width="1.6" stroke-linejoin="round"/></svg>' +
+      '</div>' +
+      '<div class="attachment-text"><strong>' + att.name + '</strong><span>Abrir material</span></div>';
+    messagesEl.appendChild(a);
+    scrollDown();
+  }
+
+  function addTyping() {
+    const div = document.createElement('div');
+    div.className = 'msg bot typing';
+    div.id = 'typing-indicator';
+    div.innerHTML = '<span></span><span></span><span></span>';
+    messagesEl.appendChild(div);
+    scrollDown();
+  }
+
+  function removeTyping() {
+    const t = document.getElementById('typing-indicator');
+    if (t) t.remove();
+  }
+
+  async function callAgent() {
+    busy = true;
+    sendEl.disabled = true;
+    addTyping();
+    try {
+      const res = await fetch('/api/manu-demo', {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({ messages: history }),
+      });
+      const data = await res.json();
+      removeTyping();
+      if (data.reply) {
+        addBubble('bot', data.reply);
+        history.push({ role: 'assistant', content: data.reply });
+      }
+      if (data.attachment) {
+        addAttachment(data.attachment);
+      }
+    } catch (e) {
+      removeTyping();
+      addBubble('bot', 'Ops, deu uma instabilidade aqui. Pode repetir?');
+    }
+    busy = false;
+    sendEl.disabled = false;
+    inputEl.focus();
+  }
+
+  function sendMessage() {
+    const text = inputEl.value.trim();
+    if (!text || busy) return;
+    addBubble('user', text);
+    history.push({ role: 'user', content: text });
+    inputEl.value = '';
+    callAgent();
+  }
+
+  sendEl.addEventListener('click', sendMessage);
+  inputEl.addEventListener('keydown', function (e) {
+    if (e.key === 'Enter') sendMessage();
+  });
+
+  // Dispara a mensagem de recepção assim que a página carrega
+  callAgent();
+})();
+</script>
+
+</body>
+</html>
