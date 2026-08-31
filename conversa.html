@@ -596,6 +596,7 @@ h1 span { color: var(--magenta-deep); }
     const a = document.createElement('a');
     a.className = 'attachment';
     a.href = att.url;
+    a.download = att.name;
     a.target = '_blank';
     a.rel = 'noopener';
     a.innerHTML =
